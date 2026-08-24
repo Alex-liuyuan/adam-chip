@@ -49,7 +49,8 @@ class EngineeringRequest:
 def _prompt(request: EngineeringRequest) -> str:
     agent = request.task["agent"]
     mission = ROLE_MISSIONS[agent]
-    run = request.context.worktree.parents[2]
+    worktree = request.context.worktree.resolve()
+    run = next((path for path in (worktree, *worktree.parents) if (path / "materials").is_dir()), worktree.parent)
     payload = {
         "task": request.task,
         "hardware_ir": {key: value for key, value in request.context.hardware_ir.items() if key != "observations"},

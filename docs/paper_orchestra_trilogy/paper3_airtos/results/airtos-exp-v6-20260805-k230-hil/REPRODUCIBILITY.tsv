@@ -1,0 +1,16 @@
+实验	平台	输入	规模	原始日志	状态
+核心一-联合准入	CanMV-K230/RT-Smart	model.aeg	13类×300	logs/core1/admission.log	通过
+核心一-联合诊断	CanMV-K230/RT-Smart	model.aeg	23400	logs/core1/diagnostics.log	通过
+核心一-原子提交	CanMV-K230/RT-Smart	model.aeg	2/4/8/16线程各100000	logs/core1/transactions_*.log	通过
+核心二-全量重放	CanMV-K230/RT-Smart	formal_corpus.bin	7950加载+24548调度	logs/core2/formal_replay.log	通过
+核心二-生成算子时序	CanMV-K230/RT-Smart	cpu_model.c/rvv_model.c	各30批×1000	logs/core2/aot_*_timing.csv	数值通过，最坏执行时间合同失败
+核心二-控制开销	CanMV-K230/RT-Smart	model.aeg	7类×30批×1000	logs/core2/control_overhead.csv	5微秒阈值通过，5%阈值失败
+核心三-内存租约	CanMV-K230/RT-Smart	冻结确定性序列	1000000	logs/core3/allocator_*.log	通过
+核心三-真实物理搬运	CanMV-K230/RT-Smart	64/256/4096/65536字节	各250000	logs/core3/dma_*.log	通过
+核心四-迟到事件	CanMV-K230/RT-Smart	7类事件	各100000	logs/core4/stale_replay.log	状态机通过，非真实驱动中断
+核心四-恢复与回退	CanMV-K230/RT-Smart	model.aeg	1500+4800+1200	logs/core4/recovery*.log;fallback_gates.log	通过
+核心四-归因反馈	CanMV-K230/RT-Smart	8类基础和带噪声数据	800+2400	logs/core4/trace_*.log	通过
+核心四-设备生命周期	CanMV-K230/RT-Smart	真实设备重开/重初始化	300	logs/core4/gsdma_lifecycle.log	通过
+核心四-长测预检	CanMV-K230/RT-Smart	四档真实搬运	10秒/42183作业	logs/preflight/long_hil_preflight.log	通过
+核心四-二十四分钟持续运行	CanMV-K230/RT-Smart	四档真实搬运	1440秒/6685424作业	logs/core4/long_hil_24min_formal.log	通过
+核心四-后续二十四小时长测	CanMV-K230/RT-Smart	异构混合负载	至少86400秒且1000000作业	待生成	待补测

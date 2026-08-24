@@ -12,47 +12,54 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parent
 PYTHON = ROOT / ".venv/bin/python"
 
 
+def repository_layout() -> tuple[Path, Path]:
+    repository = Path(subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        check=True,
+    ).stdout.strip())
+    return repository, ROOT.relative_to(repository)
+
+
 def run(revision: str = "HEAD") -> dict:
+    repository, project_path = repository_layout()
     with tempfile.TemporaryDirectory(prefix="soc-image-clean-") as tmp:
         checkout = Path(tmp) / "checkout"
-        add = subprocess.run(
-            ["git", "worktree", "add", "--detach", str(checkout), revision],
-            cwd=REPOSITORY,
+        clone = subprocess.run(
+            ["git", "clone", "--no-local", "--no-checkout", str(repository), str(checkout)],
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             check=False,
         )
-        if add.returncode:
-            return {"ok": False, "revision": revision, "stage": "worktree_add", "output": add.stdout}
-        try:
-            proc = subprocess.run(
-                [str(PYTHON if PYTHON.is_file() else Path(sys.executable)), "tools/run_strict_tests.py"],
-                cwd=checkout / "chip",
-                text=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                check=False,
-            )
-            return {
-                "ok": proc.returncode == 0,
-                "revision": revision,
-                "stage": "strict_tests",
-                "returncode": proc.returncode,
-                "output": proc.stdout,
-            }
-        finally:
-            subprocess.run(
-                ["git", "worktree", "remove", "--force", str(checkout)],
-                cwd=REPOSITORY,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                check=False,
-            )
+        if clone.returncode:
+            return {"ok": False, "revision": revision, "stage": "clone", "output": clone.stdout}
+        selected = subprocess.run(
+            ["git", "checkout", "--detach", revision], cwd=checkout, text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False,
+        )
+        if selected.returncode:
+            return {"ok": False, "revision": revision, "stage": "checkout", "output": selected.stdout}
+        proc = subprocess.run(
+            [str(PYTHON if PYTHON.is_file() else Path(sys.executable)), "tools/run_strict_tests.py"],
+            cwd=checkout / project_path,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            check=False,
+        )
+        return {
+            "ok": proc.returncode == 0,
+            "revision": revision,
+            "stage": "strict_tests",
+            "returncode": proc.returncode,
+            "output": proc.stdout,
+        }
 
 
 def main() -> int:

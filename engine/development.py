@@ -21,12 +21,29 @@ from engine.source_export import export_project_source_context
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parent
+PROJECT_DIR = Path("chip")
 TASK_SCHEMA = ROOT / "schemas/development_task.schema.json"
 AGENT_SCHEMA = ROOT / "schemas/development_agent_report.schema.json"
 REVIEW_SCHEMA = ROOT / "schemas/development_review.schema.json"
 ModelRunner = Callable[[Path, str, Path, Path, bool], dict[str, Any]]
 IsolatedBaseline = tuple[str, bytes]
+
+
+def _source_path(repository: Path) -> Path:
+    repository = repository.resolve()
+    if ROOT.resolve().is_relative_to(repository):
+        return ROOT.resolve().relative_to(repository)
+    return PROJECT_DIR if (repository / PROJECT_DIR).is_dir() else Path(".")
+
+
+REPOSITORY = Path(subprocess.run(
+    ["git", "rev-parse", "--show-toplevel"], cwd=ROOT, text=True,
+    stdout=subprocess.PIPE, check=True,
+).stdout.strip())
+
+
+def _repository_paths(paths: list[str], project_path: Path) -> list[str]:
+    return [str(project_path / path) if project_path != Path(".") else path for path in paths]
 
 
 def _git_environment(**values: str) -> dict[str, str]:
@@ -56,9 +73,11 @@ def _git(repo: Path, *args: str, check: bool = True) -> str:
 
 def _isolated_checkout(repository: Path, destination: Path, revision: str) -> IsolatedBaseline:
     destination.mkdir(parents=True)
+    source_path = _source_path(repository)
+    treeish = revision if source_path == Path(".") else f"{revision}:{source_path.as_posix()}"
     with tempfile.NamedTemporaryFile(suffix=".tar") as archive:
         proc = subprocess.run(
-            ["git", "archive", "--format=tar", f"--output={archive.name}", revision, ROOT.name],
+            ["git", "archive", "--format=tar", f"--output={archive.name}", f"--prefix={PROJECT_DIR}/", treeish],
             cwd=repository, env=_git_environment(), text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False,
         )
         if proc.returncode:
@@ -66,21 +85,22 @@ def _isolated_checkout(repository: Path, destination: Path, revision: str) -> Is
         with tarfile.open(archive.name) as stream:
             stream.extractall(destination, filter="data")
     _git(destination, "init", "-q")
-    _git(destination, "add", "--", ROOT.name)
+    _git(destination, "add", "--", str(PROJECT_DIR))
     _git(
         destination, "-c", "user.name=SoC Image Factory", "-c", "user.email=soc-image@localhost", "-c", "core.hooksPath=/dev/null",
-        "commit", "-q", "-m", f"isolated base {revision}", "--", ROOT.name,
+        "commit", "-q", "-m", f"isolated base {revision}", "--", str(PROJECT_DIR),
     )
     return _git(destination, "rev-parse", "HEAD").strip(), (destination / ".git/config").read_bytes()
 
 
 def _install_source_contexts(repository: Path, isolated: Path, contexts: list[dict[str, Any]]) -> tuple[IsolatedBaseline, list[dict[str, Any]]]:
+    source_root = repository / _source_path(repository)
     manifests = [
-        export_project_source_context(repository / ROOT.name, item, isolated / ROOT.name / ".agent-context" / item["repository"])
+        export_project_source_context(source_root, item, isolated / PROJECT_DIR / ".agent-context" / item["repository"])
         for item in contexts
     ]
     if manifests:
-        _git(isolated, "add", "--", f"{ROOT.name}/.agent-context")
+        _git(isolated, "add", "--", f"{PROJECT_DIR}/.agent-context")
         _git(isolated, "-c", "user.name=SoC Image Factory", "-c", "user.email=soc-image@localhost", "-c", "core.hooksPath=/dev/null", "commit", "-q", "--amend", "--no-edit")
     return (_git(isolated, "rev-parse", "HEAD").strip(), (isolated / ".git/config").read_bytes()), manifests
 
@@ -111,8 +131,10 @@ def _status_paths(repo: Path) -> list[str]:
     return sorted(set(paths))
 
 
-def _chip_path(repository_path: str) -> str | None:
-    prefix = ROOT.name + "/"
+def _chip_path(repository_path: str, project_path: Path = PROJECT_DIR) -> str | None:
+    if project_path == Path("."):
+        return repository_path
+    prefix = project_path.as_posix().rstrip("/") + "/"
     return repository_path[len(prefix):] if repository_path.startswith(prefix) else None
 
 
@@ -135,12 +157,16 @@ def _nested_acceptance() -> bool:
         return False
     return (
         os.environ.get("SOC_IMAGE_ACCEPTANCE_SANDBOX") == "1"
-        and ROOT.resolve() == Path("/mnt/chip")
+        and ROOT.resolve() in {Path("/mnt/chip"), Path("/mnt")}
         and uid_map == ["0", "0", "1"]
     )
 
 
-def _run_commands(worktree: Path, commands: list[list[str]]) -> tuple[list[dict[str, Any]], list[str]]:
+def _run_commands(
+    worktree: Path,
+    commands: list[list[str]],
+    project_path: Path = PROJECT_DIR,
+) -> tuple[list[dict[str, Any]], list[str]]:
     reports = []
     errors = []
     nested = _nested_acceptance()
@@ -181,7 +207,10 @@ def _run_commands(worktree: Path, commands: list[list[str]]) -> tuple[list[dict[
                 if not nested:
                     sandboxed.extend(["--proc", "/proc"])
                 sandboxed.extend(["--dev", "/dev"])
-                sandboxed.extend(["--chdir", f"/mnt/{ROOT.name}", "--", *command])
+                sandboxed.extend([
+                    "--chdir", "/mnt" if project_path == Path(".") else f"/mnt/{project_path}",
+                    "--", *command,
+                ])
                 proc = subprocess.run(
                     sandboxed, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                     check=False, timeout=900, env=environment,
@@ -235,7 +264,8 @@ class DevelopmentEngine:
         self.task_path = task_path.resolve()
         self.out = out.resolve()
         self.repository = repository.resolve()
-        self.chip = self.repository / ROOT.name
+        self.project_path = _source_path(self.repository)
+        self.chip = self.repository / self.project_path
         self.model_runner = model_runner
         self.task = json.loads(self.task_path.read_text(encoding="utf-8"))
         Draft202012Validator(json.loads(TASK_SCHEMA.read_text(encoding="utf-8"))).validate(self.task)
@@ -313,7 +343,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
         if not changed:
             errors.append("Agent produced no owned-path changes")
         for path in self.task["required_outputs"]:
-            output = worktree / ROOT.name / path
+            output = worktree / PROJECT_DIR / path
             if not output.is_file() or output.is_symlink():
                 errors.append(f"missing required regular output: {path}")
         return changed, errors
@@ -332,8 +362,8 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
         return changed, errors, reports
 
     @staticmethod
-    def _patch(worktree: Path, changed: list[str]) -> str:
-        paths = [ROOT.name + "/" + path for path in changed]
+    def _patch(worktree: Path, changed: list[str], project_path: Path = PROJECT_DIR) -> str:
+        paths = _repository_paths(changed, project_path)
         existing = [path for path in paths if (worktree / path).exists()]
         if existing:
             _git(worktree, "add", "-N", "--", *existing)
@@ -356,7 +386,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
             return self._finish("blocked", [f"base revision mismatch: expected {self.task['base_revision']}, got {current}"])
         dirty_owned = []
         for path in _status_paths(self.repository):
-            relative = _chip_path(path)
+            relative = _chip_path(path, self.project_path)
             if relative is not None and _within(relative, self.task["owned_paths"]):
                 dirty_owned.append(relative)
         if dirty_owned:
@@ -379,7 +409,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
             rejected_patch_hashes: set[str] = set()
             for number in range(1, self.task["max_attempts"] + 1):
                 output = self.out / f"agent-attempt-{number}.json"
-                model = self.model_runner(candidate / ROOT.name, self._prompt(failures), output, AGENT_SCHEMA, False)
+                model = self.model_runner(candidate / PROJECT_DIR, self._prompt(failures), output, AGENT_SCHEMA, False)
                 changed, errors, command_reports = self._validate_candidate(candidate, candidate_revision)
                 errors[0:0] = self._model_errors(model, AGENT_SCHEMA)
                 model_report = model.get("report", {}) if model.get("ok") else {}
@@ -422,7 +452,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
                         errors.extend(verification_errors)
                         if not verification_errors:
                             review_output = self.out / f"independent-review-attempt-{number}.json"
-                            review = self.model_runner(verifier / ROOT.name, self._review_prompt(patch_digest), review_output, REVIEW_SCHEMA, True)
+                            review = self.model_runner(verifier / PROJECT_DIR, self._review_prompt(patch_digest), review_output, REVIEW_SCHEMA, True)
                             attempt["review"] = review
                             review_report = review.get("report", {}) if review.get("ok") else {}
                             review_errors = self._model_errors(review, REVIEW_SCHEMA)
@@ -466,7 +496,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
 
             promotion_commit = None
             if promote:
-                repository_paths = [ROOT.name + "/" + path for path in changed]
+                repository_paths = _repository_paths(changed, self.project_path)
                 applied = False
                 updated = False
                 common = Path(_git(self.repository, "rev-parse", "--git-common-dir").strip())
@@ -478,7 +508,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
                         if _git(self.repository, "rev-parse", "HEAD").strip() != self.task["base_revision"]:
                             raise RuntimeError("repository advanced before promotion")
                         if any(
-                            (relative := _chip_path(path)) is not None and _within(relative, self.task["owned_paths"])
+                            (relative := _chip_path(path, self.project_path)) is not None and _within(relative, self.task["owned_paths"])
                             for path in _status_paths(self.repository)
                         ):
                             raise RuntimeError("owned paths changed before promotion")
@@ -488,7 +518,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
                         _git(self.repository, "apply", "--check", str(patch_path))
                         _git(self.repository, "apply", str(patch_path))
                         applied = True
-                        if self._patch(self.repository, changed) != patch:
+                        if self._patch(self.repository, changed, self.project_path) != patch:
                             raise RuntimeError("promotion worktree differs from verified patch")
                         _git(self.repository, "apply", "--cached", str(patch_path))
                         if _git(self.repository, "diff", "--no-ext-diff", "--no-textconv", "--cached", "--binary", "HEAD", "--", *repository_paths) != patch:
@@ -524,7 +554,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
                             raise RuntimeError("promoted commit differs from verified patch")
                         dirty_after = [
                             relative for path in _status_paths(self.repository)
-                            if (relative := _chip_path(path)) is not None and _within(relative, self.task["owned_paths"])
+                            if (relative := _chip_path(path, self.project_path)) is not None and _within(relative, self.task["owned_paths"])
                         ]
                         if dirty_after:
                             raise RuntimeError("owned paths changed during promotion: " + ", ".join(dirty_after))
@@ -544,7 +574,7 @@ The structured result must bind task_id={task_id}, base_revision={base_revision}
                         _git(self.repository, "apply", "-R", str(patch_path), check=False)
                     dirty_after = [
                         relative for path in _status_paths(self.repository)
-                        if (relative := _chip_path(path)) is not None and _within(relative, self.task["owned_paths"])
+                        if (relative := _chip_path(path, self.project_path)) is not None and _within(relative, self.task["owned_paths"])
                     ]
                     if dirty_after:
                         rollback_errors.append("rollback left dirty owned paths: " + ", ".join(dirty_after))
@@ -954,7 +984,11 @@ def selftest() -> None:
         assert not (chip / "rollback").exists() and not _git(repository, "diff", "--cached", "--", "chip/rollback").strip()
 
     if not _nested_acceptance():
-        reports, errors = _run_commands(REPOSITORY, [["python3", "-m", "engine.development", "--selftest"]])
+        reports, errors = _run_commands(
+            REPOSITORY,
+            [["python3", "-m", "engine.development", "--selftest"]],
+            _source_path(REPOSITORY),
+        )
         assert not errors, reports
 
 

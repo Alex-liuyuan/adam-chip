@@ -430,7 +430,7 @@ def init_soc(
 
 
 def selftest() -> None:
-    contexts = _resolved_contexts()
+    contexts = _json(KIT / "source-context.lock.json")["sources"]
     with tempfile.TemporaryDirectory() as temporary:
         root = Path(temporary)
         fixture = root / "fixture"

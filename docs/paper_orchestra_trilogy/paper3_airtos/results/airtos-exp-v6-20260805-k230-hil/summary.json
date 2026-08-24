@@ -1,0 +1,138 @@
+{
+  "core1": {
+    "admission_cases": 3900,
+    "admission_failures": 0,
+    "diagnostic_cases": 23400,
+    "diagnostic_macro_f1": 1.0,
+    "health_race_cases": 300,
+    "health_race_failures": 0,
+    "overlaps": 0,
+    "partial_commits": 0,
+    "transaction_accepted": 112091,
+    "transaction_operations": 400000,
+    "transaction_rejected": 287909,
+    "trust_rotation_cases": 1500,
+    "trust_rotation_failures": 0
+  },
+  "core2": {
+    "aot": {
+      "cpu": {
+        "cases": 30000,
+        "failures": 0,
+        "max_batch_p99_ns": 1592,
+        "max_ns": 19926
+      },
+      "rvv": {
+        "cases": 30000,
+        "failures": 0,
+        "max_batch_p99_ns": 1592,
+        "max_ns": 19778
+      }
+    },
+    "control_overhead": {
+      "clock": {
+        "max_batch_p99_ns": 1518,
+        "max_ns": 12111
+      },
+      "complete_isr": {
+        "max_batch_p99_ns": 3445,
+        "max_ns": 39074
+      },
+      "lease_release": {
+        "max_batch_p99_ns": 1667,
+        "max_ns": 2629
+      },
+      "load": {
+        "max_batch_p99_ns": 3741,
+        "max_ns": 36963
+      },
+      "queue_push_pop": {
+        "max_batch_p99_ns": 1555,
+        "max_ns": 37037
+      },
+      "simedf": {
+        "max_batch_p99_ns": 2223,
+        "max_ns": 37037
+      },
+      "trace": {
+        "max_batch_p99_ns": 1704,
+        "max_ns": 35777
+      }
+    },
+    "corpus_bytes": 49085520,
+    "fallback_observed_max_within_plan_wcet": false,
+    "loader_cases": 7950,
+    "loader_failures": 0,
+    "p99_admission_threshold_ns": 5000,
+    "p99_control_threshold_pass": true,
+    "plan_deadline_us": 100,
+    "plan_fallback_wcet_us": 10,
+    "plan_primary_wcet_us": 4,
+    "primary_observed_max_within_plan_wcet": false,
+    "schedule_cases": 24548,
+    "schedule_failures": 0,
+    "steady_state_five_percent_pass": false
+  },
+  "core3": {
+    "allocator_attempts": 1000000,
+    "allocator_safety_failures": 0,
+    "dma_cases": 1000000,
+    "dma_failures": 0,
+    "dma_sizes": {
+      "256": {
+        "cases": 250000,
+        "mean_ns": 34490
+      },
+      "4096": {
+        "cases": 250000,
+        "mean_ns": 86502
+      },
+      "64": {
+        "cases": 250000,
+        "mean_ns": 29949
+      },
+      "65536": {
+        "cases": 250000,
+        "mean_ns": 713355
+      }
+    },
+    "negative_errors": 0,
+    "negative_omit_clean_detected": 400,
+    "negative_omit_invalidate_detected": 400,
+    "successful_leases": 948950
+  },
+  "core4": {
+    "cookie_wrap_pass": true,
+    "device_lifecycle_cases": 300,
+    "device_lifecycle_failures": 0,
+    "device_lifecycle_max_ns": 69222,
+    "device_lifecycle_p99_ns": 53148,
+    "fallback_gate_bypasses": 0,
+    "fallback_gate_episodes": 1200,
+    "long_hil": {
+      "completion_criteria_pass": true,
+      "data_failures": 0,
+      "device_failures": 0,
+      "elapsed_seconds": 1440,
+      "jobs": 6685424,
+      "lifecycle_failures": 0,
+      "minimum_duration_seconds": 1440,
+      "status": "COMPLETE",
+      "temperature_c": 52.406
+    },
+    "recovery_budget_episodes": 4800,
+    "recovery_budget_failures": 0,
+    "recovery_episodes": 1500,
+    "recovery_failures": 0,
+    "stale_events": 700000,
+    "stale_failures": 0,
+    "trace_cases": 800,
+    "trace_gate_bypass": 0,
+    "trace_macro_f1": 1.0,
+    "trace_robust_cases": 2400,
+    "trace_robust_failures": 0,
+    "trace_robust_macro_f1": 1.0,
+    "trace_top3_recall": 1.0
+  },
+  "short_experiments_pass": true
+}

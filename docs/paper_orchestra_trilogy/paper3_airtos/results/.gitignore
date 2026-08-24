@@ -1,0 +1,10 @@
+# Keep full experiment packages locally; version only paper-facing top-level records.
+*
+!/.gitignore
+!/*/
+!/*/*.md
+!/*/*.tsv
+!/*/*.env
+!/*/*.json
+!/*/*.txt
+!/*/SHA256SUMS*

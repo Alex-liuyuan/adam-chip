@@ -1,0 +1,38 @@
+{
+  "compute": null,
+  "duration_requirement_seconds": 86400,
+  "failed_checks": [
+    "missing_long_result",
+    "missing_compute_result",
+    "mixed_threshold",
+    "missing_airtos_k230_long_pass",
+    "missing_airtos_k230_compute_pass",
+    "missing_airtos_k230_mixed_pass",
+    "missing_airtos_k230_full_24h_pass",
+    "failure_marker"
+  ],
+  "long": null,
+  "mixed": {
+    "camera_restarts": 13,
+    "elapsed_seconds": 3108,
+    "face_inferences": 5040,
+    "frame_failures": 0,
+    "frames": 50400,
+    "inference_failures": 0,
+    "kpu_restarts": 69,
+    "lifecycle_failures": 1,
+    "maximum_frame_ms": 99,
+    "object_inferences": 50400
+  },
+  "observations": {
+    "buffer_reference_warnings": 14,
+    "camera_create_events": 14,
+    "compute_heartbeat_count": 46,
+    "long_heartbeat_count": 62,
+    "sensor_power_warnings": 15,
+    "temperature_max_c": 61.698,
+    "temperature_min_c": 50.605
+  },
+  "schema": "airtos.k230-full-24h.v1",
+  "status": "INCOMPLETE_OR_FAIL"
+}
