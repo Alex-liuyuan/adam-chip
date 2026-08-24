@@ -1,0 +1,321 @@
+{
+  "tables": [
+    {
+      "label": "Table 1",
+      "headers": [
+        "Endpoint",
+        "Cases or operations",
+        "Failures",
+        "Additional result"
+      ],
+      "rows": [
+        [
+          "Admission matrix",
+          "3,900",
+          "0",
+          "Structural, binding, domain, evidence, provider, memory, coherency, scheduling, and recovery decisions"
+        ],
+        [
+          "Diagnostic classification",
+          "23,400",
+          "0",
+          "Macro-F1 = 1.0"
+        ],
+        [
+          "Provider-health race",
+          "300",
+          "0",
+          "No unsafe commit"
+        ],
+        [
+          "Trust-root rotation",
+          "1,500",
+          "0",
+          "No decision failure"
+        ],
+        [
+          "Concurrent admission transactions",
+          "400,000",
+          "0",
+          "112,091 accepted; 287,909 rejected"
+        ],
+        [
+          "Lease overlaps",
+          "400,000 transactions",
+          "0",
+          "No active overlap"
+        ],
+        [
+          "Partial commits",
+          "400,000 transactions",
+          "0",
+          "No half-admitted job"
+        ]
+      ]
+    },
+    {
+      "label": "Table 2",
+      "headers": [
+        "Endpoint",
+        "Cases",
+        "Failures or mismatch",
+        "Result"
+      ],
+      "rows": [
+        [
+          "Loader corpus",
+          "7,950",
+          "0",
+          "Production loader path"
+        ],
+        [
+          "Schedule-oracle comparison",
+          "24,548",
+          "0",
+          "Status and finish-time agreement"
+        ],
+        [
+          "CPU Add+ReLU numeric check",
+          "30,000",
+          "0",
+          "Maximum batch p99 = 1.592 us; maximum = 19.926 us"
+        ],
+        [
+          "RVV Add+ReLU numeric check",
+          "30,000",
+          "0",
+          "Maximum batch p99 = 1.592 us; maximum = 19.778 us"
+        ]
+      ]
+    },
+    {
+      "label": "Table 3",
+      "headers": [
+        "Timing path",
+        "Registered threshold",
+        "Observed batch p99",
+        "Observed maximum",
+        "Contract outcome"
+      ],
+      "rows": [
+        [
+          "RVV primary Add+ReLU",
+          "WCET 4 us",
+          "1.592 us",
+          "19.778 us",
+          "Failed because maximum exceeded WCET"
+        ],
+        [
+          "CPU fallback Add+ReLU",
+          "WCET 10 us",
+          "1.592 us",
+          "19.926 us",
+          "Failed because maximum exceeded WCET"
+        ],
+        [
+          "Clock read",
+          "p99 below 5 us",
+          "1.518 us",
+          "12.111 us",
+          "5 us p99 threshold passed"
+        ],
+        [
+          "ISR completion",
+          "p99 below 5 us",
+          "3.445 us",
+          "39.074 us",
+          "5 us p99 threshold passed"
+        ],
+        [
+          "Lease release",
+          "p99 below 5 us",
+          "1.667 us",
+          "2.629 us",
+          "5 us p99 threshold passed"
+        ],
+        [
+          "Plan load",
+          "p99 below 5 us",
+          "3.741 us",
+          "36.963 us",
+          "5 us p99 threshold passed"
+        ],
+        [
+          "Queue push/pop",
+          "p99 below 5 us",
+          "1.555 us",
+          "37.037 us",
+          "5 us p99 threshold passed"
+        ],
+        [
+          "SimEDF admission",
+          "p99 below 5 us",
+          "2.223 us",
+          "37.037 us",
+          "5 us p99 threshold passed"
+        ],
+        [
+          "Trace emission",
+          "p99 below 5 us",
+          "1.704 us",
+          "35.777 us",
+          "5 us p99 threshold passed"
+        ]
+      ]
+    },
+    {
+      "label": "Table 4",
+      "headers": [
+        "Endpoint",
+        "Cases or attempts",
+        "Failures",
+        "Result"
+      ],
+      "rows": [
+        [
+          "Allocator",
+          "1,000,000",
+          "0",
+          "948,950 successful leases"
+        ],
+        [
+          "Physical DMA transfers",
+          "1,000,000",
+          "0",
+          "Zero data mismatch"
+        ],
+        [
+          "Omitted clean negative control",
+          "400",
+          "0 undetected",
+          "400/400 omissions detected"
+        ],
+        [
+          "Omitted invalidate negative control",
+          "400",
+          "0 undetected",
+          "400/400 omissions detected"
+        ]
+      ]
+    },
+    {
+      "label": "Table 5",
+      "headers": [
+        "Transfer size",
+        "Cases",
+        "Mean complete-path time"
+      ],
+      "rows": [
+        [
+          "64 B",
+          "250,000",
+          "29.949 us"
+        ],
+        [
+          "256 B",
+          "250,000",
+          "34.490 us"
+        ],
+        [
+          "4,096 B",
+          "250,000",
+          "86.502 us"
+        ],
+        [
+          "65,536 B",
+          "250,000",
+          "713.355 us"
+        ]
+      ]
+    },
+    {
+      "label": "Table 6",
+      "headers": [
+        "Endpoint",
+        "Cases or episodes",
+        "Failures or bypass",
+        "Additional result"
+      ],
+      "rows": [
+        [
+          "Seven stale-event classes",
+          "700,000",
+          "0",
+          "No stale state mutation"
+        ],
+        [
+          "Recovery episodes",
+          "1,500",
+          "0",
+          "Bounded state-machine checks"
+        ],
+        [
+          "Recovery-budget episodes",
+          "4,800",
+          "0",
+          "Quarantine/budget closure"
+        ],
+        [
+          "Fallback gate episodes",
+          "1,200",
+          "0",
+          "No re-admission bypass"
+        ],
+        [
+          "Base trace classification",
+          "800",
+          "0",
+          "Macro-F1 = 1.0; top-3 recall = 1.0"
+        ],
+        [
+          "Robust trace classification",
+          "2,400",
+          "0",
+          "Macro-F1 = 1.0 under noise and ring wrap"
+        ],
+        [
+          "Device reopen/reinitialize",
+          "300",
+          "0",
+          "p99 = 53.148 us; maximum = 69.222 us"
+        ],
+        [
+          "Continuous HIL",
+          "6,685,424 DMA iterations",
+          "0",
+          "1,440 s; 52.406 C final temperature"
+        ]
+      ]
+    },
+    {
+      "label": "Table 7",
+      "headers": [
+        "Experimental core",
+        "Count represented in coverage plot",
+        "Observed safety failures"
+      ],
+      "rows": [
+        [
+          "Core 1: admission and transactions",
+          "429,100",
+          "0"
+        ],
+        [
+          "Core 2: loading, scheduling, and numeric runs",
+          "92,498",
+          "0"
+        ],
+        [
+          "Core 3: allocation and DMA",
+          "2,000,800",
+          "0"
+        ],
+        [
+          "Core 4: stale, recovery, fallback, trace, lifecycle, and HIL jobs",
+          "7,396,424",
+          "0"
+        ]
+      ]
+    }
+  ]
+}

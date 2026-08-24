@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.airtos-policy.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "policy_id", "admission", "recovery", "trace"],
+  "properties": {
+    "schema": {"const": "soc-image.airtos-policy.v2"},
+    "policy_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "admission": {
+      "type": "object", "additionalProperties": false,
+      "required": ["algorithm", "max_retries", "include_active_residual", "include_nonpreemptive_blocking"],
+      "properties": {
+        "algorithm": {"const": "sim_edf_plus"},
+        "max_retries": {"type": "integer", "minimum": 1},
+        "include_active_residual": {"const": true},
+        "include_nonpreemptive_blocking": {"const": true}
+      }
+    },
+    "recovery": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cancel_ack_timeout_us", "reset_timeout_us", "reinit_timeout_us", "max_reset_attempts", "quarantine_on_failure"],
+      "properties": {
+        "cancel_ack_timeout_us": {"type": "integer", "minimum": 1},
+        "reset_timeout_us": {"type": "integer", "minimum": 1},
+        "reinit_timeout_us": {"type": "integer", "minimum": 1},
+        "max_reset_attempts": {"type": "integer", "minimum": 1},
+        "quarantine_on_failure": {"const": true}
+      }
+    },
+    "trace": {
+      "type": "object", "additionalProperties": false,
+      "required": ["format", "chronological_export", "report_dropped"],
+      "properties": {
+        "format": {"const": "soc-image.airtos-trace.v2"},
+        "chronological_export": {"const": true},
+        "report_dropped": {"const": true}
+      }
+    }
+  }
+}

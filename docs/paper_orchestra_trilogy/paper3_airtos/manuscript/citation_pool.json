@@ -1,0 +1,430 @@
+{
+  "cutoff_date": "2026-07-05",
+  "min_cite_paper_count": 19,
+  "papers": [
+    {
+      "paperId": "local:liu1973scheduling",
+      "bibtex_key": "liu1973scheduling",
+      "title": "Scheduling Algorithms for Multiprogramming in a Hard-Real-Time Environment",
+      "abstract": "Foundational analysis of fixed-priority and earliest-deadline scheduling under explicit periodic-task assumptions.",
+      "year": 1973,
+      "authors": [
+        {
+          "name": "C. L. Liu"
+        },
+        {
+          "name": "James W. Layland"
+        }
+      ],
+      "venue": "Journal of the ACM"
+    },
+    {
+      "paperId": "local:baruah1990sporadic",
+      "bibtex_key": "baruah1990preemptively",
+      "title": "Preemptively Scheduling Hard-Real-Time Sporadic Tasks on One Processor",
+      "abstract": "Processor-demand analysis for feasibility of sporadic hard-real-time tasks on a uniprocessor.",
+      "year": 1990,
+      "authors": [
+        {
+          "name": "Sanjoy Baruah"
+        },
+        {
+          "name": "Aloysius K. Mok"
+        },
+        {
+          "name": "Louis E. Rosier"
+        }
+      ],
+      "venue": "IEEE Real-Time Systems Symposium"
+    },
+    {
+      "paperId": "local:vestal2007mixed",
+      "bibtex_key": "vestal2007preemptive",
+      "title": "Preemptive Scheduling of Multi-Criticality Systems with Varying Degrees of Execution Time Assurance",
+      "abstract": "Relates schedulability to multiple levels of execution-time assurance in mixed-criticality systems.",
+      "year": 2007,
+      "authors": [
+        {
+          "name": "Steve Vestal"
+        }
+      ],
+      "venue": "IEEE Real-Time Systems Symposium"
+    },
+    {
+      "paperId": "local:topcuoglu2002heft",
+      "bibtex_key": "topcuoglu2002performanceeffective",
+      "title": "Performance-Effective and Low-Complexity Task Scheduling for Heterogeneous Computing",
+      "abstract": "Introduces HEFT-style list scheduling for precedence-constrained task graphs on heterogeneous processors.",
+      "year": 2002,
+      "authors": [
+        {
+          "name": "Haluk Topcuoglu"
+        },
+        {
+          "name": "Salim Hariri"
+        },
+        {
+          "name": "Min-You Wu"
+        }
+      ],
+      "venue": "IEEE Transactions on Parallel and Distributed Systems"
+    },
+    {
+      "paperId": "local:augonnet2011starpu",
+      "bibtex_key": "augonnet2011starpu",
+      "title": "StarPU: A Unified Platform for Task Scheduling on Heterogeneous Multicore Architectures",
+      "abstract": "A task runtime that coordinates scheduling and data management across heterogeneous multicore resources.",
+      "year": 2011,
+      "authors": [
+        {
+          "name": "Cedric Augonnet"
+        },
+        {
+          "name": "Samuel Thibault"
+        },
+        {
+          "name": "Raymond Namyst"
+        },
+        {
+          "name": "Pierre-Andre Wacrenier"
+        }
+      ],
+      "venue": "Concurrency and Computation: Practice and Experience"
+    },
+    {
+      "paperId": "local:bauer2012legion",
+      "bibtex_key": "bauer2012legion",
+      "title": "Legion: Expressing Locality and Independence with Logical Regions",
+      "abstract": "Uses logical regions to express task independence and data locality for distributed heterogeneous execution.",
+      "year": 2012,
+      "authors": [
+        {
+          "name": "Michael Bauer"
+        },
+        {
+          "name": "Sean Treichler"
+        },
+        {
+          "name": "Elliott Slaughter"
+        },
+        {
+          "name": "Alex Aiken"
+        }
+      ],
+      "venue": "SC"
+    },
+    {
+      "paperId": "local:rossbach2011ptask",
+      "bibtex_key": "rossbach2011ptask",
+      "title": "PTask: Operating System Abstractions to Manage GPUs as Compute Devices",
+      "abstract": "Introduces operating-system abstractions for accelerator tasks, data movement, and dependency-aware execution.",
+      "year": 2011,
+      "authors": [
+        {
+          "name": "Christopher J. Rossbach"
+        },
+        {
+          "name": "Jon Currey"
+        },
+        {
+          "name": "Mark Silberstein"
+        },
+        {
+          "name": "Baishakhi Ray"
+        },
+        {
+          "name": "Emmett Witchel"
+        }
+      ],
+      "venue": "SOSP"
+    },
+    {
+      "paperId": "local:lin2022typedag",
+      "bibtex_key": "lin2022typeaware",
+      "title": "Type-Aware Federated Scheduling for Typed DAG Tasks on Heterogeneous Multicore Platforms",
+      "abstract": "Studies real-time scheduling of typed DAG tasks whose vertices require heterogeneous processor types.",
+      "year": 2022,
+      "authors": [
+        {
+          "name": "Ching-Chi Lin"
+        },
+        {
+          "name": "Junjie Shi"
+        },
+        {
+          "name": "Niklas Ueter"
+        },
+        {
+          "name": "Mario Guenzel"
+        },
+        {
+          "name": "Jan Reineke"
+        },
+        {
+          "name": "Jian-Jia Chen"
+        }
+      ],
+      "venue": "IEEE Transactions on Computers"
+    },
+    {
+      "paperId": "local:choi2020prema",
+      "bibtex_key": "choi2020prema",
+      "title": "PREMA: A Predictive Multi-Task Scheduling Algorithm for Preemptible Neural Processing Units",
+      "abstract": "Predictive scheduling for multi-task NPUs with hardware-supported preemption and latency objectives.",
+      "year": 2020,
+      "authors": [
+        {
+          "name": "Yujeong Choi"
+        },
+        {
+          "name": "Minsoo Rhu"
+        }
+      ],
+      "venue": "HPCA"
+    },
+    {
+      "paperId": "local:ghodrati2020planaria",
+      "bibtex_key": "ghodrati2020planaria",
+      "title": "Planaria: Dynamic Architecture Fission for Spatial Multi-Tenant Acceleration of Deep Neural Networks",
+      "abstract": "Dynamically partitions accelerator resources to execute multiple DNN tenants spatially.",
+      "year": 2020,
+      "authors": [
+        {
+          "name": "Soroush Ghodrati"
+        },
+        {
+          "name": "Byung Hoon Ahn"
+        },
+        {
+          "name": "Joon Kyung Kim"
+        }
+      ],
+      "venue": "MICRO"
+    },
+    {
+      "paperId": "local:kim2023moca",
+      "bibtex_key": "kim2023moca",
+      "title": "MoCA: Memory-Centric, Adaptive Execution for Multi-Tenant Deep Neural Networks",
+      "abstract": "Coordinates multi-tenant DNN execution through memory-centric adaptation and quality-of-service control.",
+      "year": 2023,
+      "authors": [
+        {
+          "name": "Seah Kim"
+        },
+        {
+          "name": "Hasan Genc"
+        },
+        {
+          "name": "Vadim Nikiforov"
+        }
+      ],
+      "venue": "HPCA"
+    },
+    {
+      "paperId": "local:kim2023dream",
+      "bibtex_key": "kim2023dream",
+      "title": "DREAM: A Dynamic Scheduler for Dynamic Real-Time Multi-Model ML Workloads",
+      "abstract": "A dynamic scheduler targeting real-time multi-model machine-learning workloads at the edge.",
+      "year": 2023,
+      "authors": [
+        {
+          "name": "Seah Kim"
+        },
+        {
+          "name": "Hyoukjun Kwon"
+        },
+        {
+          "name": "Jinook Song"
+        }
+      ],
+      "venue": "CODES+ISSS"
+    },
+    {
+      "paperId": "local:yu2019salus",
+      "bibtex_key": "yu2019salus",
+      "title": "Salus: Fine-Grained GPU Sharing Primitives for Deep Learning Applications",
+      "abstract": "Provides fine-grained GPU sharing primitives that separate persistent model state from transient execution memory.",
+      "year": 2019,
+      "authors": [
+        {
+          "name": "Peifeng Yu"
+        },
+        {
+          "name": "Mosharaf Chowdhury"
+        }
+      ],
+      "venue": "Proceedings of Machine Learning and Systems"
+    },
+    {
+      "paperId": "local:gujarati2020clockwork",
+      "bibtex_key": "gujarati2020serving",
+      "title": "Serving DNNs like Clockwork: Performance Predictability from the Bottom Up",
+      "abstract": "Builds predictable DNN serving around controlled execution and explicit timing information.",
+      "year": 2020,
+      "authors": [
+        {
+          "name": "Arpan Gujarati"
+        },
+        {
+          "name": "Reza Karimi"
+        },
+        {
+          "name": "Safya Alzayat"
+        }
+      ],
+      "venue": "OSDI"
+    },
+    {
+      "paperId": "local:hobbs2023runtimeassurance",
+      "bibtex_key": "hobbs2023runtime",
+      "title": "Runtime Assurance for Safety-Critical Systems: An Introduction to Safety Filtering Approaches for Complex Control Systems",
+      "abstract": "Surveys runtime-assurance architectures that mediate complex components through a trusted safety filter.",
+      "year": 2023,
+      "authors": [
+        {
+          "name": "Kerianne L. Hobbs"
+        },
+        {
+          "name": "Mark Mote"
+        },
+        {
+          "name": "Matthew Abate"
+        },
+        {
+          "name": "Samuel Coogan"
+        },
+        {
+          "name": "Eric Feron"
+        }
+      ],
+      "venue": "IEEE Control Systems"
+    },
+    {
+      "paperId": "local:seto1998simplex",
+      "bibtex_key": "seto1998simplex",
+      "title": "The Simplex Architecture for Safe Online Control System Upgrades",
+      "abstract": "Separates a high-performance controller from a trusted baseline and decision logic for safe online operation.",
+      "year": 1998,
+      "authors": [
+        {
+          "name": "Danbing Seto"
+        },
+        {
+          "name": "Bruce H. Krogh"
+        },
+        {
+          "name": "Lui Sha"
+        },
+        {
+          "name": "Alongkrit Chutinan"
+        }
+      ],
+      "venue": "American Control Conference"
+    },
+    {
+      "paperId": "local:leucker2009runtimeverification",
+      "bibtex_key": "leucker2009brief",
+      "title": "A Brief Account of Runtime Verification",
+      "abstract": "Reviews runtime verification as analysis of execution observations against formal properties.",
+      "year": 2009,
+      "authors": [
+        {
+          "name": "Martin Leucker"
+        },
+        {
+          "name": "Christian Schallhart"
+        }
+      ],
+      "venue": "Journal of Logic and Algebraic Programming"
+    },
+    {
+      "paperId": "local:linux2026dmabuf",
+      "bibtex_key": "documentation2026buffer",
+      "title": "Buffer Sharing and Synchronization: DMA Fences",
+      "abstract": "Official documentation defining DMA buffer sharing, fences, and asynchronous completion synchronization.",
+      "year": 2026,
+      "authors": [
+        {
+          "name": "Linux Kernel Documentation"
+        }
+      ],
+      "venue": "Official technical documentation"
+    },
+    {
+      "paperId": "local:linux2026dmaapi",
+      "bibtex_key": "documentation2026dma",
+      "title": "DMA API Howto",
+      "abstract": "Official documentation for DMA mappings, cache ownership transitions, and synchronization requirements.",
+      "year": 2026,
+      "authors": [
+        {
+          "name": "Linux Kernel Documentation"
+        }
+      ],
+      "venue": "Official technical documentation"
+    },
+    {
+      "paperId": "local:barr2015oracle",
+      "bibtex_key": "barr2015oracle",
+      "title": "The Oracle Problem in Software Testing: A Survey",
+      "abstract": "Surveys construction and limitations of test oracles used to determine expected program behavior.",
+      "year": 2015,
+      "authors": [
+        {
+          "name": "Earl T. Barr"
+        },
+        {
+          "name": "Mark Harman"
+        },
+        {
+          "name": "Phil McMinn"
+        },
+        {
+          "name": "Muzammil Shahbaz"
+        },
+        {
+          "name": "Shin Yoo"
+        }
+      ],
+      "venue": "IEEE Transactions on Software Engineering"
+    },
+    {
+      "paperId": "local:banbury2021mlperftiny",
+      "bibtex_key": "banbury2021mlperf",
+      "title": "MLPerf Tiny Benchmark",
+      "abstract": "Defines a reproducible benchmark suite and measurement discipline for tiny machine-learning systems.",
+      "year": 2021,
+      "authors": [
+        {
+          "name": "Colby R. Banbury"
+        },
+        {
+          "name": "Vijay Janapa Reddi"
+        },
+        {
+          "name": "Peter Torelli"
+        }
+      ],
+      "venue": "NeurIPS Datasets and Benchmarks Track"
+    },
+    {
+      "paperId": "local:david2021tflm",
+      "bibtex_key": "david2021tensorflow",
+      "title": "TensorFlow Lite Micro: Embedded Machine Learning on TinyML Systems",
+      "abstract": "Describes an embedded inference runtime designed for constrained TinyML platforms.",
+      "year": 2021,
+      "authors": [
+        {
+          "name": "Robert David"
+        },
+        {
+          "name": "Jared Duke"
+        },
+        {
+          "name": "Advait Jain"
+        }
+      ],
+      "venue": "Proceedings of Machine Learning and Systems"
+    }
+  ]
+}

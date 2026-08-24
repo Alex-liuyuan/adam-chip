@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-08-06T05:26:19+00:00",
+  "workflow": "PaperOrchestra",
+  "manuscript": "AIRTOS: Evidence-Constrained Admission, Resource Governance, and Recovery for Heterogeneous Edge AI",
+  "inputs": {
+    "inputs/idea.md": "e074d5bef0bcadfad355aa90080d344af0e44b2977f7b40de804a0849052304d",
+    "inputs/experimental_log.md": "9585330eaa61bef5d02127bdf388509cd866e8ca3373eaa7bfc2cbc6fc4356a4",
+    "inputs/template.tex": "516181ac0d54cc8ad8244dc3127355ac8a8f94d5cb0b0809d4fc1117d4c7f933",
+    "inputs/conference_guidelines.md": "411108f8fc276d22ff506cda21de87571991119042909553971150b8a59aa270",
+    "theoretical_design.md": "9e7d6f3fae57d206d28e6c34aaa789512844241fe7ca4c90bbbc4d2446ce25f9"
+  },
+  "intermediate": {
+    "outline.json": "7b4b42f3e70c8201e0392f372e7a52c3bc41d4e1113f03e49fde3033344c4758",
+    "refs.bib": "309db688ba118153b8ad4625cd18f65a89b107f728eac5771758fa7f233b29ec",
+    "generate_statistical_figures.py": "0465bc743a3b15da4c4101de2a30900854d98910cc951e55b299e1e751db3351",
+    "main_figure_content.md": "cfb0ebfd8fa27bdb0952265d1fe5716ba36092a9c12696a3df4b2b5c98ae3025",
+    "statistical_figure_design.md": "d3d0b242f67c06e61baef3ac430e6d4d9b29114b894c1a53216ccdc851fa5d31",
+    "captions.json": "99914f3c8f434a918b423fd7342c1cef93aa9edff9914f46f8fc9d6786f17b42",
+    "refinement/worklog.json": "a7fc9f9decf2df451b019e1dbcde14a1f34545ca047dc561d83845aed4141039",
+    "PaperBanana source image": "29f3a659a50d4e7c4d36a97ccdd9c136f0319ad0a2152c5df192f5b17270b697"
+  },
+  "figures": {
+    "fig_airtos_main.png": "813a94adf7a02d1911a98fba99455ebd3598c3b54caa03b6bd924cde4ee98dba",
+    "fig_admission_atomicity_analysis.png": "e5fad62034259aa19863e1858fc3480b8f1c9bd1e934617a7addf8c8b246c2f2",
+    "fig_memory_dma_analysis.png": "d6f083c7790260f79e61b144183eeb52c39ae63eb71920fbb461bb7c1a813244",
+    "fig_recovery_governance_analysis.png": "39597022fcf7053526cae68b1efd78fcc5de57be20dae8a53fdc5f0fa052c961",
+    "fig_timing_contract_analysis.png": "b0c24e0940c0b9400add44258a5d95eab04502b2b7083a61ca079d905a1a6ed7"
+  },
+  "final": {
+    "final/paper.tex": "812bf03e7db2f92c1798b89c85e428ee379641cdf33790e524ba5b171c5d8cf4",
+    "final/paper.pdf": "b826ec48143cb459f6e86429539c3b18032739750ab972f62d73771c459653a9",
+    "pages": 15,
+    "figures": 5,
+    "references": 22,
+    "reproducible_build": "SOURCE_DATE_EPOCH=0 FORCE_SOURCE_DATE=1"
+  }
+}

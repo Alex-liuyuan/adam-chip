@@ -1,0 +1,10 @@
+{
+  "decision": "ACCEPT_IMPROVED",
+  "exit_code": 0,
+  "overall_prev": 82.15,
+  "overall_curr": 85.7,
+  "overall_delta": 3.55,
+  "net_subaxis": 22.0,
+  "consecutive_small": 0,
+  "plateau_triggered": false
+}

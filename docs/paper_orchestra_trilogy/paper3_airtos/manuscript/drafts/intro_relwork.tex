@@ -1,0 +1,202 @@
+\documentclass[lettersize,journal]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{xcolor}
+\hyphenation{hetero-geneous accel-erator coher-ency}
+
+\begin{document}
+
+\title{AIRTOS: An Evidence-Constrained Runtime for Heterogeneous Edge AI Systems}
+
+\author{Anonymous Authors}
+
+\maketitle
+
+\begin{abstract}
+% To be written from idea.md and experimental_log.md.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Edge AI, heterogeneous computing, real-time systems, admission control, runtime assurance, fault recovery.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Edge inference increasingly crosses a boundary that conventional deployment
+interfaces leave implicit. A compiler emits an execution plan, yet the plan
+enters a live system whose provider health, contiguous memory, cache ownership,
+outstanding device commands, and admitted workload can differ from the
+conditions under which that plan was produced. Moreover, an inference is not
+necessarily one schedulable thread. It can be a directed acyclic graph (DAG) of
+CPU, vector, accelerator, and DMA segments with resource-specific execution
+bounds and asynchronous completions. Consequently, structural validity and
+numerical correctness alone do not establish that a plan is eligible to run in
+the current state.
+
+Real-time scheduling theory makes the assumptions behind timing guarantees
+explicit. Classical earliest-deadline-first (EDF) results and sporadic-task
+feasibility analysis depend on bounded execution and defined arrival models
+\cite{liu1973scheduling,baruah1990preemptively}; work on execution-time
+assurance further shows that the strength of a timing claim is inseparable from
+the bounds supplied to the scheduler \cite{vestal2007preemptive}. Heterogeneous
+task runtimes and schedulers already express DAG dependencies, locality, and
+resource types \cite{topcuoglu2002performanceeffective,augonnet2011starpu,
+bauer2012legion,rossbach2011ptask,lin2022typeaware}. Accelerator-sharing
+systems likewise address preemption, spatial partitioning, memory pressure,
+and multi-model quality of service
+\cite{choi2020prema,ghodrati2020planaria,kim2023moca,kim2023dream}. These
+mechanisms provide essential foundations, but they normally begin after the
+workload and its execution bounds have been accepted as valid inputs.
+
+This paper presents AIRTOS, an evidence-constrained runtime governance layer
+for heterogeneous edge-AI plans. AIRTOS treats a compiler plan as a first-class
+admission object and evaluates a joint predicate over parsing, binding,
+applicability domain, evidence coverage, provider availability, memory,
+coherency, schedulability, and recoverability. Admission probes an arena lease,
+captures the current schedule, evaluates a conservative multi-resource
+simulation, and commits memory and job state only if their generations remain
+unchanged. During execution, dependency-ready segments enter stable
+per-resource EDF queues. Plan-declared ownership transitions govern cache and
+DMA operations, while a device epoch and dispatch cookie scope completion
+events. Recovery consumes a bounded policy, quarantines an exhausted resource,
+and subjects a fallback to the same evidence, provider, lease, and schedule
+checks before execution.
+
+The design follows the separation principle used in runtime assurance: a
+complex producer may propose an action, but a smaller consumer-side mechanism
+decides whether that action is admissible in the present state
+\cite{seto1998simplex,hobbs2023runtime}. Runtime observations are similarly
+restricted. Trace records can select a subsequent compiler experiment, but
+they cannot elevate evidence or install a new plan directly; every candidate
+must return through verification and admission. This preserves the distinction
+between observing an execution and establishing a reusable claim, consistent
+with runtime-verification practice \cite{leucker2009brief}.
+
+We evaluate AIRTOS through four claim-oriented cores and a short physical
+hardware-in-the-loop run. The frozen corpus covers package and admission
+decisions, concurrent memory--schedule transactions, independent scheduling
+oracle comparisons, arena leases, physical DMA transfers with negative
+coherency controls, stale-event and recovery state transitions, fallback
+gates, and trace classification. On one CanMV-K230-LP4 V3.0 board, one million
+physical transfers produced no byte mismatch, and omission controls detected
+all 800 intentionally missing ownership operations. The timing audit is
+equally important: CPU and RVV maximum observations exceeded their registered
+10 and 4~$\mu$s execution bounds, respectively. AIRTOS therefore identifies
+the tested plan as outside its timing contract rather than converting favorable
+percentiles into an unsupported hard-real-time claim.
+
+This work makes four contributions. First, it defines evidence-constrained
+admission that combines plan qualification with live resource, memory,
+coherency, scheduling, and recovery state. Second, it implements an optimistic
+atomic lease-and-schedule transaction for concurrent admission. Third, it
+unifies dependency-aware resource governance, explicit ownership transitions,
+and epoch-scoped completion and recovery semantics. Fourth, it provides a
+finite-domain evaluation that reports both invariant checks and a negative
+timing-contract result. The contribution is this governed composition and its
+consumer-checkable boundaries; EDF, heterogeneous DAG execution, accelerator
+sharing, and DMA synchronization remain established mechanisms.
+
+\section{Background and Related Work}
+\subsection{Real-Time and Heterogeneous DAG Scheduling}
+Liu and Layland establish the classical uniprocessor foundation for EDF under
+periodic-task assumptions \cite{liu1973scheduling}, while processor-demand
+analysis extends feasibility reasoning to sporadic workloads
+\cite{baruah1990preemptively}. Vestal makes execution-time assurance an
+explicit scheduling dimension \cite{vestal2007preemptive}. AIRTOS retains this
+discipline: its deadline statement is conditional on registered segment costs,
+non-preemptive blocking, modeled arrivals, coherency charges, and recovery
+charges. Its simulator rechecks the deadlines of all admitted jobs after a
+candidate insertion instead of treating EDF priority as a timing proof.
+
+HEFT schedules precedence-constrained tasks across heterogeneous processors
+using rank-based list scheduling \cite{topcuoglu2002performanceeffective}.
+StarPU combines task scheduling with heterogeneous data management
+\cite{augonnet2011starpu}; Legion expresses independence and locality through
+logical regions \cite{bauer2012legion}; and PTask makes accelerator work and
+dataflow visible to the operating system \cite{rossbach2011ptask}. Type-aware
+federated scheduling gives real-time semantics to typed heterogeneous DAGs
+\cite{lin2022typeaware}. AIRTOS does not present DAG queues or per-resource EDF
+as new scheduling algorithms. It places these mechanisms downstream of an
+evidence and applicability gate and couples their admission result to a
+generation-checked memory transaction and recovery state.
+
+\subsection{Accelerator Runtimes and Multi-Tenant AI}
+Accelerator sharing spans different hardware assumptions. PREMA exploits
+preemptible NPU execution \cite{choi2020prema}, whereas Planaria partitions an
+accelerator spatially among tenants \cite{ghodrati2020planaria}. MoCA adapts
+execution around multi-tenant memory behavior \cite{kim2023moca}, and DREAM
+targets dynamic real-time multi-model edge workloads \cite{kim2023dream}.
+Salus exposes fine-grained GPU sharing primitives and distinguishes persistent
+from transient memory \cite{yu2019salus}; Clockwork pursues predictable DNN
+serving through controlled execution and explicit timing information
+\cite{gujarati2020serving}. These systems establish that scheduling, memory,
+and latency must be governed jointly, but their admitted unit is generally a
+model or execution request rather than a plan carrying separately checkable
+domain and evidence obligations. AIRTOS addresses that qualification boundary
+and does not compare throughput across incompatible accelerator capabilities.
+
+Embedded inference systems demonstrate how tightly runtime design is coupled
+to constrained memory and platform support. TensorFlow Lite Micro provides an
+embedded inference runtime for small devices \cite{david2021tensorflow}, and
+MLPerf Tiny establishes reproducible measurement practices for such platforms
+\cite{banbury2021mlperf}. AIRTOS focuses on a different layer: deciding whether
+a particular evidence-carrying heterogeneous plan may enter the live runtime,
+then maintaining its memory, timing, ownership, and recovery obligations.
+
+\subsection{Runtime Assurance, Coherency, and Recovery}
+Simplex separates a high-performance controller from a trusted baseline and
+decision module \cite{seto1998simplex}; modern runtime-assurance work generalizes
+that structure as a safety filter around complex components
+\cite{hobbs2023runtime}. Runtime verification studies how execution events are
+checked against specified properties \cite{leucker2009brief}. AIRTOS applies
+the same separation at the compiler--runtime boundary: a producer supplies a
+plan and evidence, while the runtime independently checks eligibility against
+current state. Its trace is observational and can only propose a new
+experiment, preventing an execution from certifying its own replacement.
+
+DMA synchronization specifications already define fences and ownership
+transitions for asynchronous devices \cite{documentation2026buffer,
+documentation2026dma}. AIRTOS does not redefine those primitives. Instead, the
+plan names the buffer range and required clean, barrier, and invalidate actions;
+the runtime checks that the range lies within the active lease and invokes the
+provider hooks at the ownership boundary. Completion attribution then adds an
+orthogonal device-generation rule: an event is accepted only when resource,
+epoch, active command, and cookie agree. This prevents an event associated with
+an earlier device generation from completing a newly active segment.
+
+Finally, the evaluation uses an independent scheduling oracle rather than
+deriving expected answers from the runtime under test, following the broader
+testing principle that oracle construction is part of the validity argument
+\cite{barr2015oracle}. Together, these lines of work motivate AIRTOS as a
+governance layer that composes established scheduling, task-runtime,
+assurance, and DMA mechanisms around one consumer-checkable plan contract.
+
+\section{System Model and Problem Formulation}
+% To be filled by the section-writing stage.
+
+\section{AIRTOS Design}
+% To be filled by the section-writing stage.
+
+\section{Implementation}
+% To be filled by the section-writing stage.
+
+\section{Experimental Methodology}
+% To be filled by the section-writing stage.
+
+\section{Evaluation}
+% To be filled by the section-writing stage.
+
+\section{Discussion}
+% To be filled by the section-writing stage.
+
+\section{Conclusion}
+% To be filled by the section-writing stage.
+
+\clearpage
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

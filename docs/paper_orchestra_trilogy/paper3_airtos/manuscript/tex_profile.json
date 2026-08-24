@@ -1,0 +1,21 @@
+{
+  "available": [
+    "cleveref",
+    "nicefrac",
+    "microtype",
+    "url",
+    "booktabs",
+    "natbib",
+    "hyperref",
+    "fontenc",
+    "times",
+    "lmodern"
+  ],
+  "missing": [],
+  "use_cleveref": true,
+  "use_nicefrac": true,
+  "use_microtype": true,
+  "use_t1_fontenc": true,
+  "tex_binary": "pdflatex",
+  "checked_at": "2026-08-05T11:41:37.383814"
+}

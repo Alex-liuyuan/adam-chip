@@ -1,0 +1,8 @@
+{
+  "schema": "sysuos.soc_product.v1",
+  "name": "sysuos_k230_v3p0",
+  "platform": "canaan_k230",
+  "features": ["boot", "rtos", "micropython", "camera", "display", "npu_runtime"],
+  "overlay": "overlay",
+  "entrypoint": "apps/sysu_product_smoke.py"
+}

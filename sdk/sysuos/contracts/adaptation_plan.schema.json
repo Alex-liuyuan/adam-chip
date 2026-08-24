@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sysuos.adaptation-plan.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "soc", "board", "base", "stable_components", "tasks"],
+  "properties": {
+    "schema": {"const": "sysuos.adaptation-plan.v1"},
+    "soc": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+    "board": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+    "base": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["soc", "pack_sha256"],
+          "properties": {
+            "soc": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+            "pack_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        }
+      ]
+    },
+    "stable_components": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {"enum": ["micropython", "sysu_compat", "rt_ai", "compiler_runtime"]}
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "provider", "action", "status", "base_implementation", "owned_paths", "required_outputs"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^provider:(boot|device|media|accelerator|image)$"},
+          "provider": {"enum": ["boot", "device", "media", "accelerator", "image"]},
+          "action": {"enum": ["assess", "adapt", "replace"]},
+          "status": {"enum": ["pending", "candidate", "verified", "blocked"]},
+          "base_implementation": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+\\.json$"}]},
+          "owned_paths": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/path"}},
+          "required_outputs": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/path"}}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"}
+  }
+}

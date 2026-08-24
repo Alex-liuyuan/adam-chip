@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADAM chip target contract",
+  "type": "object",
+  "required": ["name", "isa", "abi", "toolchain_prefix", "memory", "firmware"],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "isa": {"type": "string", "minLength": 1},
+    "abi": {"type": "string", "minLength": 1},
+    "cpu": {"type": "string"},
+    "toolchain_prefix": {"type": "string", "minLength": 1},
+    "rtos": {"type": "string"},
+    "cores": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "role", "rvv"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "rvv": {"type": "boolean"},
+          "frequency_mhz": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "properties": {
+        "regions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "kind", "base", "size_bytes"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "kind": {"type": "string", "minLength": 1},
+              "base": {"type": "string", "minLength": 1},
+              "size_bytes": {"type": "integer", "minimum": 1},
+              "owner": {"type": "string"},
+              "parent": {"type": "string"},
+              "attributes": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    "mmio_regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "base", "size_bytes", "owner", "status"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "base": {"type": "string", "minLength": 1},
+          "size_bytes": {"type": "integer", "minimum": 1},
+          "owner": {"type": "string", "minLength": 1},
+          "status": {"enum": ["source_verified", "board_verified", "unresolved"]}
+        }
+      }
+    },
+    "amp": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "mode": {"enum": ["asymmetric", "symmetric"]},
+        "core_ownership": {"type": "object"},
+        "shared_resources": {"type": "array", "items": {"type": "string"}},
+        "boot_sequence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["order", "core", "stage"],
+            "properties": {
+              "order": {"type": "integer", "minimum": 0},
+              "core": {"type": "string", "minLength": 1},
+              "stage": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "ipc": {
+          "type": "object",
+          "properties": {
+            "kind": {"type": "string"},
+            "mmio_region": {"type": "string"},
+            "participants": {"type": "array", "minItems": 2, "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "cache": {"type": "object"},
+    "dma": {"type": "object"},
+    "timer": {"type": "object"},
+    "interrupt": {
+      "type": "object",
+      "properties": {
+        "controller": {"type": "string"},
+        "base": {"type": "string"},
+        "size_bytes": {"type": "integer", "minimum": 1},
+        "source_count": {"type": "integer", "minimum": 1},
+        "vector_offset": {"type": "integer", "minimum": 0},
+        "contexts": {"type": "array", "items": {"type": "object"}},
+        "irqs": {"type": "object"}
+      }
+    },
+    "uart": {"type": "object"},
+    "rvv": {"type": "object"},
+    "npu": {"type": "object"},
+    "firmware": {"type": "object"},
+    "_provenance": {"type": "object"}
+  },
+  "additionalProperties": true
+}

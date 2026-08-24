@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADAM flash contract",
+  "type": "object",
+  "required": ["schema", "target"],
+  "properties": {
+    "schema": {"type": "string"},
+    "target": {"type": "string"},
+    "transport": {"type": "string"},
+    "backends": {"type": "array"},
+    "required_evidence": {"type": "array"},
+    "verify": {"type": "object"},
+    "not_claimed": {"type": "array"}
+  },
+  "additionalProperties": true
+}

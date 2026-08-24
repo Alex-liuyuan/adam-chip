@@ -1,0 +1,37 @@
+{
+  "backends": [
+    "cpu",
+    "rvv",
+    "kpu"
+  ],
+  "not_claimed": [
+    "RVV and KPU require board evidence before verified acceleration claims"
+  ],
+  "npu": {
+    "dtypes": [
+      "int8",
+      "int16"
+    ],
+    "kind": "kpu",
+    "ops": [
+      "conv2d",
+      "matmul",
+      "relu"
+    ],
+    "status": "candidate_requires_hil"
+  },
+  "rvv": {
+    "required_board_evidence": [
+      "rvv_cpu1_board_diff_pass",
+      "rvv_cpu1_benchmark_pass"
+    ],
+    "required_static_evidence": [
+      "rvv_contract_pass",
+      "rvv_static_compile_pass",
+      "rvv_objdump_signature_pass"
+    ],
+    "vlen_bits": 128
+  },
+  "schema": "adam.accelerator.contract.v1",
+  "target": "canmv_k230_lp4_v3"
+}

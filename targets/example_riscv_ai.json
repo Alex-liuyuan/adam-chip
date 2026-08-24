@@ -1,0 +1,84 @@
+{
+  "name": "example_riscv_ai",
+  "isa": "rv64gcv",
+  "abi": "lp64d",
+  "cpu": "generic-rv64",
+  "toolchain_prefix": "riscv64-unknown-elf-",
+  "rtos": "rt-thread",
+  "memory": {
+    "sram_kb": 512,
+    "flash_kb": 8192,
+    "dma_safe_kb": 128,
+    "npu_sram_kb": 256,
+    "ai_arena_kb": 384
+  },
+  "cache": {
+    "line_size": 64
+  },
+  "dma": {
+    "base": "0x20000000UL",
+    "irq": 11,
+    "alignment": 64,
+    "channels": 2,
+    "max_transfer_bytes": 1048576
+  },
+  "timer": {
+    "base": "0x02000000UL",
+    "kind": "clint",
+    "irq": 7
+  },
+  "interrupt": {
+    "controller": "plic",
+    "base": "0x0c000000UL"
+  },
+  "uart": {
+    "base": "0x10000000UL",
+    "kind": "ns16550",
+    "irq": 10
+  },
+  "rvv": {
+    "enabled": true,
+    "vlen": 128
+  },
+  "npu": {
+    "enabled": true,
+    "base": "0x30000000UL",
+    "irq": 12,
+    "ops": [
+      "conv2d",
+      "matmul",
+      "relu"
+    ],
+    "dtypes": [
+      "int8",
+      "float16"
+    ],
+    "matrix_tile": [
+      16,
+      16
+    ]
+  },
+  "python_app": {
+    "name": "demo_ai_app",
+    "model": "model.onnx"
+  },
+  "micropython": {
+    "enabled": true,
+    "package": "rtthread-micropython",
+    "bsp": "bsp/vendor/example_riscv_ai",
+    "heap_kb": 192,
+    "stack_kb": 16,
+    "python_files": [
+      "main.py",
+      "modules"
+    ]
+  },
+  "firmware": {
+    "image": "build/micropython/example_riscv_ai/firmware.bin",
+    "download": {
+      "command": "openocd -f interface/cmsis-dap.cfg -f target/riscv.cfg -c \"program $FIRMWARE verify reset exit\""
+    },
+    "serial": "/dev/ttyUSB0",
+    "baudrate": 115200
+  }
+}

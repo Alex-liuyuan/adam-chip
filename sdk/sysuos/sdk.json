@@ -1,0 +1,85 @@
+{
+  "components": [
+    "core/micropython/component.json",
+    "core/sysu_compat/component.json",
+    "core/rt_ai/component.json",
+    "core/compiler_runtime/component.json"
+  ],
+  "name": "SYSUOS source adaptation kit",
+  "provider_contracts": [
+    "boot",
+    "device",
+    "media",
+    "accelerator",
+    "image"
+  ],
+  "schema": "sysuos.sdk.v1",
+  "source_context_lock": "source-context.lock.json",
+  "source_context_lock_sha256": "d3ea77f044205961042a5539aa2631b0c2cc51973e5f28aa7c326f19a1e750b4",
+  "source_layers": [
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "65d9b14292a668f0d14022ce13b8738c8faf5882387e929331145992b89700cf"
+      },
+      "id": "rtthread-micropython",
+      "redistribution": "allowed_with_license",
+      "repository": "rtthread-micropython",
+      "revision": "97e1a5f1435ef0d24ad92b15fa31878c8f684c84",
+      "role": "target MicroPython runtime",
+      "selected_paths": [
+        "SConscript",
+        "port"
+      ],
+      "source_usage": "target"
+    },
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "ed90e96bffe7a3f10b7b66fecdebfbfa383d62768467da384ba476ea0e26c917"
+      },
+      "id": "micropython-upstream",
+      "redistribution": "allowed_with_license",
+      "repository": "micropython-upstream",
+      "revision": "06bcfd5b74c6d275ae0991a19dab8704299e4e05",
+      "role": "MicroPython host tools",
+      "selected_paths": [
+        "tools/mpremote",
+        "tools/pyboard.py"
+      ],
+      "source_usage": "build_tool"
+    },
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "fc1fc82ef9520ed2cfbd48c107c14595def4617dc4f8b73a97fb8a428d81cb26"
+      },
+      "id": "micropython-stubber",
+      "redistribution": "allowed_with_license",
+      "repository": "micropython-stubber",
+      "revision": "140b614a306e8ce76214ed62bc0da3a0c86038bd",
+      "role": "API verification inventory",
+      "selected_paths": [
+        "src/stubber/board"
+      ],
+      "source_usage": "verification_tool"
+    },
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "15323cdfa03aad10039c467979cf7376ad04b4ec655a18899c663b783ea41af2"
+      },
+      "id": "openmv",
+      "redistribution": "file_level_review_required",
+      "repository": "openmv",
+      "revision": "be63fec4fba63accdb47f2c4ffbf84017555e538",
+      "role": "OpenMV reference evidence",
+      "selected_paths": [
+        "modules",
+        "drivers/sensors"
+      ],
+      "source_usage": "reference_only"
+    }
+  ],
+  "version": "1.1.0"
+}

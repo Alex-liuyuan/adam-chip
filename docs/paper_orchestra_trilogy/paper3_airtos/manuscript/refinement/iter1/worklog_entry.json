@@ -1,0 +1,17 @@
+{
+  "addressed_weaknesses": [
+    "Consolidated plan fields and runtime enforcement in a contract table.",
+    "Added atomic-publication and bounded-recovery proof statements.",
+    "Separated software, physical data-path, controlled injection, and short-HIL evidence in one table."
+  ],
+  "integrated_answers": [
+    "Identified locked job publication after successful lease commit as the linearization point.",
+    "Mapped major plan fields to the exact consuming runtime checks.",
+    "Mapped each experimental layer to its supported statement."
+  ],
+  "actions_taken": [
+    "Expanded System Model and Problem Formulation.",
+    "Added Table I to AIRTOS Design.",
+    "Added a two-column evidence-layer table to Experimental Methodology."
+  ]
+}

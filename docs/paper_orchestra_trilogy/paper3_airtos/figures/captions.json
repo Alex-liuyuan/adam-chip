@@ -1,0 +1,5 @@
+{
+  "fig_airtos_plan_admission": "Evidence-bounded plan admission. AIRTOS filters each compiler-generated plan by memory, finish time, backend availability, applicability domain, and evidence level before execution.",
+  "fig_airtos_resource_governance": "AIRTOS governs CPU/RVV/NPU resources, DMA, fences, device queues, timeout, cancellation, and reset as coupled runtime state rather than independent API calls.",
+  "fig_airtos_trace_feedback": "Telemetry feedback components. Queue time, DMA time, kernel time, memory peak, deadline misses, and failures are converted into compiler and plan-generation feedback."
+}

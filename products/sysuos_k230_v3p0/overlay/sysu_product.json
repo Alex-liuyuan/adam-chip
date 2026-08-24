@@ -1,0 +1,5 @@
+{
+  "schema": "sysuos.product_payload.v1",
+  "product": "sysuos_k230_v3p0",
+  "entrypoint": "apps/sysu_product_smoke.py"
+}

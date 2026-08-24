@@ -1,0 +1,15 @@
+{
+  "adaptation_plan": "adaptation.json",
+  "blockers": ["boot, DDR and image implementations require independently verified hardware facts", "signed material is intentionally excluded"],
+  "board": "canmv_k230_v3p0",
+  "hardware_materials": [], "patches": [],
+  "providers": {
+    "accelerator": {"contract": "contracts/accelerator_provider.schema.json", "implementation": null, "replacement_required": true},
+    "boot": {"contract": "contracts/boot_provider.schema.json", "implementation": null, "replacement_required": true},
+    "device": {"contract": "contracts/device_provider.schema.json", "implementation": null, "replacement_required": true},
+    "image": {"contract": "contracts/image_provider.schema.json", "implementation": null, "replacement_required": true},
+    "media": {"contract": "contracts/media_provider.schema.json", "implementation": null, "replacement_required": true}
+  },
+  "reference_image": null, "schema": "sysuos.soc-pack.v1", "soc": "k230", "sources": [],
+  "tests": []
+}

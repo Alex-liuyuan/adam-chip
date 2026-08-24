@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.phase-report.v1",
+  "title": "Ordered implementation phase report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "phase",
+    "status",
+    "base_commit",
+    "result_commit",
+    "commands",
+    "tests",
+    "artifacts",
+    "blockers",
+    "next_phase_allowed",
+    "completed_at"
+  ],
+  "properties": {
+    "schema": {"const": "soc-image.phase-report.v1"},
+    "phase": {"type": "integer", "minimum": 0, "maximum": 11},
+    "status": {"enum": ["passed", "failed", "blocked"]},
+    "base_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "result_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "commands": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "tests": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "blockers": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "next_phase_allowed": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "integer", "minimum": 1, "maximum": 12}
+      ]
+    },
+    "completed_at": {"type": "string", "format": "date-time"}
+  }
+}

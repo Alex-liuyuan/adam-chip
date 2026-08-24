@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.development-review.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "base_revision", "patch_sha256", "verdict", "summary", "findings"],
+  "properties": {
+    "task_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "base_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "patch_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "verdict": {"enum": ["pass", "fail"]},
+    "summary": {"type": "string"},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["severity", "file", "line", "detail"],
+        "properties": {
+          "severity": {"enum": ["P1", "P2", "P3"]},
+          "file": {"type": "string"},
+          "line": {"type": "integer", "minimum": 0},
+          "detail": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

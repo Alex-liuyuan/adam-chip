@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.capability-registry.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "capabilities"],
+  "properties": {
+    "schema": {"const": "soc-image.capability-registry.v1"},
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "depends_on", "activates_on", "provider"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+          "activates_on": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "material_selectors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "provider": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["agent", "tool", "verify_tool", "owned_paths", "outputs"],
+            "properties": {
+              "agent": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*Agent$"},
+              "tool": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+              "verify_tool": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+              "owned_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}},
+              "outputs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}},
+              "artifact_outputs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}},
+              "internal_artifact_outputs": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}}
+            }
+          }
+        }
+      }
+    }
+  }
+}

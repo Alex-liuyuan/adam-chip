@@ -1,0 +1,1 @@
+{"providers":["boot","device","media","accelerator","image"],"schema":"sysuos.reference-product.v1","stable_layers":["micropython","sysu_compat","rt_ai","compiler_runtime"]}

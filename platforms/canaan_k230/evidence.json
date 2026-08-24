@@ -1,0 +1,27 @@
+{
+  "levels": {
+    "E1": "schema and static checks",
+    "E2": "compile evidence",
+    "E3": "host diff evidence",
+    "E4": "virtual RT-Thread execution evidence",
+    "E5": "physical board functional evidence",
+    "E6": "physical board stress and performance evidence"
+  },
+  "not_claimed": [
+    "K230 physical SDK release requires E5/E6 board logs"
+  ],
+  "optional": [
+    "rvv_board_perf",
+    "kpu_driver_hil"
+  ],
+  "release_required": [
+    "contract_valid_pass",
+    "bsp_build_pass",
+    "image_generated_pass",
+    "flash_readback_pass",
+    "boot_marker_pass",
+    "rvaic_model_diff_pass"
+  ],
+  "schema": "adam.evidence.contract.v1",
+  "target": "canmv_k230_lp4_v3"
+}

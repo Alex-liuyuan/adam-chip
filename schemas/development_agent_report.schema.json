@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.development-agent-report.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["task_id", "base_revision", "status", "summary", "tests", "blockers"],
+  "properties": {
+    "task_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "base_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "status": {"enum": ["implemented", "blocked"]},
+    "summary": {"type": "string"},
+    "tests": {"type": "array", "items": {"type": "string"}},
+    "blockers": {"type": "array", "items": {"type": "string"}}
+  }
+}

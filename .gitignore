@@ -1,0 +1,11 @@
+third_party/
+__pycache__/
+*.py[cod]
+*.o
+.env
+.env.*
+config/llm.local.json
+config/agent_prompts.local.json
+/output/
+/build/phase_reports/
+/results/

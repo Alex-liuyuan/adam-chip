@@ -1,0 +1,79 @@
+/dts-v1/;
+
+/ {
+    model = "SoC Image Factory QEMU virt64 driver contract";
+    compatible = "riscv-virtio,qemu";
+    #address-cells = <2>;
+    #size-cells = <2>;
+
+    cpus {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        timebase-frequency = <10000000>;
+        cpu@0 {
+            device_type = "cpu";
+            compatible = "riscv";
+            reg = <0>;
+            riscv,isa = "rv64gcv";
+            d-cache-line-size = <64>;
+        };
+    };
+
+    memory@80000000 {
+        device_type = "memory";
+        reg = <0x0 0x80000000 0x0 0x08000000>;
+    };
+
+    soc {
+        compatible = "simple-bus";
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+
+        interrupt-controller@c000000 {
+            compatible = "riscv,plic0";
+            interrupt-controller;
+            #interrupt-cells = <1>;
+            reg = <0x0 0x0c000000 0x0 0x04000000>;
+        };
+
+        serial@10000000 {
+            compatible = "ns16550a";
+            reg = <0x0 0x10000000 0x0 0x100>;
+            interrupts = <10>;
+        };
+
+        clint@2000000 {
+            compatible = "riscv,clint0";
+            reg = <0x0 0x02000000 0x0 0x10000>;
+        };
+
+        dma-controller@10030000 {
+            compatible = "soc-image,descriptor-dma-v1";
+            dma-controller;
+            #dma-cells = <1>;
+            reg = <0x0 0x10030000 0x0 0x1000>;
+            interrupts = <11>;
+        };
+
+        clock-controller@10040000 {
+            compatible = "soc-image,fixed-clock-mmio-v1";
+            reg = <0x0 0x10040000 0x0 0x100>;
+        };
+
+        reset-controller@10041000 {
+            compatible = "soc-image,reset-v1";
+            reg = <0x0 0x10041000 0x0 0x100>;
+        };
+
+        pinmux@10042000 {
+            compatible = "soc-image,pinmux-v1";
+            reg = <0x0 0x10042000 0x0 0x100>;
+        };
+
+        mystery@10050000 {
+            compatible = "vendor,undocumented-v1";
+            reg = <0x0 0x10050000 0x0 0x100>;
+        };
+    };
+};

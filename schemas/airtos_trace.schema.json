@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.airtos-trace.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "run_id", "plan_id", "dropped", "events"],
+  "properties": {
+    "schema": {"const": "soc-image.airtos-trace.v2"},
+    "run_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "plan_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "dropped": {"type": "integer", "minimum": 0},
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["sequence", "timestamp_us", "job_id", "cookie", "plan_id", "segment_id", "resource", "epoch", "event", "status", "queue_depth"],
+        "properties": {
+          "sequence": {"type": "integer", "minimum": 0},
+          "timestamp_us": {"type": "integer", "minimum": 0},
+          "job_id": {"type": "integer", "minimum": 0},
+          "cookie": {"type": "integer", "minimum": 0},
+          "plan_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "segment_id": {"type": "integer", "minimum": 0},
+          "resource": {"enum": ["cpu", "rvv", "npu", "dma"]},
+          "epoch": {"type": "integer", "minimum": 0},
+          "event": {"type": "string", "minLength": 1},
+          "status": {"type": "integer"},
+          "queue_depth": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

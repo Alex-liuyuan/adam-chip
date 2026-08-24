@@ -1,0 +1,5 @@
+{
+  "fig_adam_codesign_graph": "Agentic Co-Design Graph. Agents exchange structured handoff objects, risk edges activate additional roles, and verifier edges connect candidates to independent evidence-producing gates.",
+  "fig_adam_risk_activation": "Risk-activated evidence collaboration. ADAM scores a candidate, activates the necessary collaboration subgraph, assigns evidence obligations, selects the next experiment by value, and stops or rolls back when the evidence policy demands it.",
+  "fig_adam_bench_design": "Planned ADAM-CoDesignBench composition. The benchmark is designed around 300 engineering tasks spanning real historical work, controlled defect injection, cross-layer integration, and hidden evaluation."
+}

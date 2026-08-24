@@ -1,0 +1,7 @@
+{
+  "fig_airtos_main": "Three-part AIRTOS runtime governance and OS-to-silicon execution. The central K230/LPDDR4 top view and aligned A-A package sections expose atomic admission, EDF dispatch, explicit ownership transfer through package and DDR layers, exact-token IRQ validation, and finite reset recovery.",
+  "fig_admission_atomicity_analysis": "Admission accuracy and transaction atomicity. The complete all-job SimEDF+ check eliminates oracle-relative false accepts and false rejects in the frozen ablation, while 400,000 concurrent transactions publish neither overlapping leases nor partial jobs.",
+  "fig_memory_dma_analysis": "Memory and physical data-path analysis. The allocator safely commits 948,950 of one million lease attempts without a tracked isolation failure; K230 complete-path latency is shown for 250,000 transfers per size, with zero byte mismatch and full detection of omitted ownership operations.",
+  "fig_recovery_governance_analysis": "Failure-governance evidence by endpoint. Log-scaled bars retain the distinct denominators for stale-event rejection, bounded recovery, quarantine, fallback, trace, device lifecycle, and short HIL rather than combining them into a common estimator.",
+  "fig_timing_contract_analysis": "Timing-evidence analysis. Software-model misses emerge only after execution exceeds registered WCET, and the K230 audit rejects both plan bounds because measured maxima exceed them despite favorable batch p99 values."
+}

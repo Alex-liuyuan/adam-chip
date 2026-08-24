@@ -1,0 +1,15 @@
+{
+  "active": "dmxapi",
+  "profiles": {
+    "dmxapi": {
+      "base_url": "https://www.dmxapi.cn",
+      "model": "gpt-5.5",
+      "api_key_env": "DMXAPI_API_KEY"
+    },
+    "dmxapi-backup": {
+      "base_url": "https://www.dmxapi.cn",
+      "model": "gpt-5.5",
+      "api_key_env": "ADAM_LLM_API_KEY"
+    }
+  }
+}

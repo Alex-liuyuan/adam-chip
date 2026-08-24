@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.task.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "capability", "agent", "depends_on", "input_hash", "hardware_ir_sha256", "reference_profile_sha256", "software_requirements_sha256", "source_policy_sha256", "toolset_sha256", "provider"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^task:[a-z][a-z0-9_]*$"},
+    "capability": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "agent": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*Agent$"},
+    "depends_on": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^task:[a-z][a-z0-9_]*$"}},
+    "input_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "hardware_ir_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reference_profile_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "software_requirements_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "toolset_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "provider": {"type": "object"}
+  }
+}

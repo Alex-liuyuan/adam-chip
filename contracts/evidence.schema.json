@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADAM evidence contract",
+  "type": "object",
+  "required": ["schema", "target", "levels", "release_required"],
+  "properties": {
+    "schema": {"type": "string"},
+    "target": {"type": "string"},
+    "levels": {"type": "object"},
+    "release_required": {"type": "array"},
+    "optional": {"type": "array"},
+    "not_claimed": {"type": "array"}
+  },
+  "additionalProperties": true
+}

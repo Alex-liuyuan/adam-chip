@@ -1,0 +1,64 @@
+{
+  "schema": "sysuos.source-context-lock.v1",
+  "sources": [
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "65d9b14292a668f0d14022ce13b8738c8faf5882387e929331145992b89700cf"
+      },
+      "license": "MIT",
+      "redistribution": "allowed_with_license",
+      "repository": "rtthread-micropython",
+      "revision": "97e1a5f1435ef0d24ad92b15fa31878c8f684c84",
+      "selected_paths": [
+        "SConscript",
+        "port"
+      ],
+      "source_usage": "target"
+    },
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "ed90e96bffe7a3f10b7b66fecdebfbfa383d62768467da384ba476ea0e26c917"
+      },
+      "license": "MIT",
+      "redistribution": "allowed_with_license",
+      "repository": "micropython-upstream",
+      "revision": "06bcfd5b74c6d275ae0991a19dab8704299e4e05",
+      "selected_paths": [
+        "tools/mpremote",
+        "tools/pyboard.py"
+      ],
+      "source_usage": "build_tool"
+    },
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "fc1fc82ef9520ed2cfbd48c107c14595def4617dc4f8b73a97fb8a428d81cb26"
+      },
+      "license": "MIT",
+      "redistribution": "allowed_with_license",
+      "repository": "micropython-stubber",
+      "revision": "140b614a306e8ce76214ed62bc0da3a0c86038bd",
+      "selected_paths": [
+        "src/stubber/board"
+      ],
+      "source_usage": "verification_tool"
+    },
+    {
+      "content_hash": {
+        "algorithm": "sha256-git-ls-tree-v1",
+        "value": "15323cdfa03aad10039c467979cf7376ad04b4ec655a18899c663b783ea41af2"
+      },
+      "license": "MIXED",
+      "redistribution": "file_level_review_required",
+      "repository": "openmv",
+      "revision": "be63fec4fba63accdb47f2c4ffbf84017555e538",
+      "selected_paths": [
+        "modules",
+        "drivers/sensors"
+      ],
+      "source_usage": "reference_only"
+    }
+  ]
+}

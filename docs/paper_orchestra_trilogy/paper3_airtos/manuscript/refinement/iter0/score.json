@@ -1,0 +1,11 @@
+{
+  "axis_scores": {
+    "scientific_depth": {"score": 82, "justification": "The joint admission predicate, conditional deadline argument, epoch isolation, and physical coherency conditions are explicitly formulated and tied to measured evidence."},
+    "technical_execution": {"score": 83, "justification": "Production paths, generation checks, fallback re-admission, and K230 integration are described concretely and supported by finite-domain experiments."},
+    "logical_flow": {"score": 80, "justification": "The compiler-evidence-runtime narrative is clear, although the contract fields and evidence layers remain distributed across several sections."},
+    "writing_clarity": {"score": 81, "justification": "Terminology is consistent and the negative timing result is stated precisely; two dense mechanism passages would benefit from compact summaries."},
+    "evidence_presentation": {"score": 84, "justification": "All four figures are discussed, exact counts are tabulated, and software versus physical results are separated in prose."},
+    "academic_style": {"score": 82, "justification": "The manuscript uses restrained IEEE systems-paper language and avoids unsupported superiority claims."}
+  },
+  "overall_score": 82.15
+}

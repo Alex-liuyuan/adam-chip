@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADAM image contract",
+  "type": "object",
+  "required": ["schema", "target", "sector_bytes", "partitions"],
+  "properties": {
+    "schema": {"type": "string"},
+    "target": {"type": "string"},
+    "sector_bytes": {"type": "integer"},
+    "image_size_bytes": {"type": "integer"},
+    "partitions": {"type": "array"},
+    "pre_partition_boot_region": {"type": "object"},
+    "not_claimed": {"type": "array"}
+  },
+  "additionalProperties": true
+}

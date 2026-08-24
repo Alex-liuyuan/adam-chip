@@ -1,0 +1,20 @@
+{
+  "strengths": [
+    "The paper frames AIRTOS as runtime governance between qualified plans and hardware rather than as a new EDF algorithm or RTOS kernel.",
+    "The all-job admission ablation and WCET sensitivity experiment directly support the principal timing argument.",
+    "Physical coherency uses observable omission controls and keeps its hardware scope precise.",
+    "The four figures are integrated into the design and evaluation narrative."
+  ],
+  "weaknesses": [
+    "The package contract fields and their enforcement points are distributed across prose, making the consumer-side boundary slower to audit.",
+    "The safety-properties subsection states lease, DAG, epoch, coherency, and deadline properties but does not state atomic publication and recovery closure with the same precision.",
+    "Software-model consistency, physical data-path evidence, controlled board state-machine injection, and short continuous operation should be summarized in one evidence-layer table."
+  ],
+  "questions": [
+    "What exact linearization point ensures that an admitted job cannot be published without its lease?",
+    "Which runtime check consumes each major field of the evidence-carrying plan?",
+    "Which experimental layer supports each class of statement?"
+  ],
+  "decision": "Accept",
+  "overall_score": 82.15
+}

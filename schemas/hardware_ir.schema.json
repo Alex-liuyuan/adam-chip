@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.hardware-ir.v1",
+  "title": "Provenance-bound SoC and board hardware IR",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "project_id",
+    "materials_lock_sha256",
+    "cpu",
+    "memory_regions",
+    "peripherals",
+    "clocks",
+    "resets",
+    "pinmux",
+    "dma",
+    "ddr",
+    "boot",
+    "accelerators",
+    "board_components",
+    "observations",
+    "unresolved",
+    "conflicts"
+  ],
+  "properties": {
+    "schema": {"const": "soc-image.hardware-ir.v1"},
+    "project_id": {"type": "string", "minLength": 1},
+    "materials_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "cpu": {"type": "object", "additionalProperties": {"$ref": "#/$defs/fact"}},
+    "memory_regions": {"type": "array", "items": {"$ref": "#/$defs/region"}},
+    "peripherals": {"type": "array", "items": {"$ref": "#/$defs/peripheral"}},
+    "clocks": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "resets": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "pinmux": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "dma": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "ddr": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "boot": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "accelerators": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "board_components": {"type": "array", "items": {"$ref": "#/$defs/namedObject"}},
+    "observations": {"type": "array", "items": {"$ref": "#/$defs/observation"}},
+    "unresolved": {"type": "array", "items": {"$ref": "#/$defs/unresolved"}},
+    "conflicts": {"type": "array", "items": {"$ref": "#/$defs/conflict"}}
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document", "sha256", "locator"],
+      "properties": {
+        "document": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "locator": {"type": "string", "minLength": 1},
+        "page": {"type": "integer", "minimum": 1}
+      }
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "state", "sources", "constraints"],
+      "properties": {
+        "value": {},
+        "unit": {"type": "string"},
+        "state": {"enum": ["authoritative", "standard_derived", "board_observed", "candidate", "unknown", "conflict"]},
+        "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}},
+        "constraints": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "namedObject": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": {"anyOf": [{"$ref": "#/$defs/fact"}, {"type": "string"}, {"type": "array"}, {"type": "object"}, {"type": "boolean"}, {"type": "integer"}, {"type": "null"}]}
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "base", "size"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"$ref": "#/$defs/fact"},
+        "base": {"$ref": "#/$defs/fact"},
+        "size": {"$ref": "#/$defs/fact"},
+        "attributes": {"$ref": "#/$defs/fact"}
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "bit_offset", "bit_width"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "bit_offset": {"$ref": "#/$defs/fact"},
+        "bit_width": {"$ref": "#/$defs/fact"},
+        "access": {"$ref": "#/$defs/fact"}
+      }
+    },
+    "register": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "offset", "fields"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "offset": {"$ref": "#/$defs/fact"},
+        "size": {"$ref": "#/$defs/fact"},
+        "access": {"$ref": "#/$defs/fact"},
+        "reset_value": {"$ref": "#/$defs/fact"},
+        "fields": {"type": "array", "items": {"$ref": "#/$defs/field"}}
+      }
+    },
+    "peripheral": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "registers"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string"},
+        "compatible": {"$ref": "#/$defs/fact"},
+        "base": {"$ref": "#/$defs/fact"},
+        "size": {"$ref": "#/$defs/fact"},
+        "interrupts": {"$ref": "#/$defs/fact"},
+        "clock_refs": {"$ref": "#/$defs/fact"},
+        "reset_refs": {"$ref": "#/$defs/fact"},
+        "pin_refs": {"$ref": "#/$defs/fact"},
+        "registers": {"type": "array", "items": {"$ref": "#/$defs/register"}}
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "state", "sources"],
+      "properties": {
+        "text": {"type": "string", "minLength": 1, "maxLength": 1000},
+        "state": {"const": "candidate"},
+        "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source"}}
+      }
+    },
+    "unresolved": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "reason", "blocking_capabilities", "probe_allowed"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "blocking_capabilities": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "probe_allowed": {"type": "boolean"}
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "paths", "message"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "paths": {"type": "array", "minItems": 2, "items": {"type": "string", "minLength": 1}},
+        "message": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

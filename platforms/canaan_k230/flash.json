@@ -1,0 +1,32 @@
+{
+  "schema": "adam.flash_contract.v1",
+  "target": "canmv_k230_lp4_v3",
+  "backends": [
+    {
+      "name": "k230_bootrom_usb",
+      "transport": "usb",
+      "vid_pid": "29f1:0230",
+      "loader_address": "0x80360000",
+      "requires_run_id": true,
+      "requires_serial_attribution": true
+    },
+    {
+      "name": "k230_sd_loader",
+      "transport": "bootrom_second_stage",
+      "media": "sdcard",
+      "requires_readback_hash": true,
+      "requires_destructive_confirm": true
+    }
+  ],
+  "required_evidence": [
+    "fresh_run_id_pass",
+    "flash_write_pass",
+    "flash_readback_hash_pass",
+    "serial_marker_attributed"
+  ],
+  "not_claimed": [
+    "This contract does not prove that a board is connected.",
+    "E5 flash evidence requires a physical write/readback/hash report."
+  ]
+}
+

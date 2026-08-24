@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.source-candidates.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "hardware_ir_sha256", "software_requirements_sha256", "source_policy_sha256", "candidates"],
+  "properties": {
+    "schema": {"const": "soc-image.source-candidates.v2"},
+    "hardware_ir_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "software_requirements_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "forge", "source_type", "url", "roles", "components", "source_paths", "covered_requirements", "match_evidence", "match", "license", "status", "errors"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]*$"},
+          "forge": {"enum": ["github", "gitee", "other"]},
+          "source_type": {"const": "git"},
+          "url": {"type": "string", "pattern": "^https://"},
+          "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+          "components": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "source_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"}},
+          "covered_requirements": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "match_evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["requirement_id", "basis", "source_paths"],
+              "properties": {
+                "requirement_id": {"type": "string", "minLength": 1},
+                "component_id": {"type": "string", "minLength": 1},
+                "basis": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+                "source_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+              }
+            }
+          },
+          "match": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["level", "architecture_compatible"],
+            "properties": {
+              "level": {"enum": ["exact_board", "exact_soc", "compatible_ip", "class", "none"]},
+              "architecture_compatible": {"type": "boolean"},
+              "board_config": {"type": "boolean"},
+              "os_abi": {"type": ["string", "null"]},
+              "media_abi": {"type": ["string", "null"]}
+            }
+          },
+          "license": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["spdx", "decision", "evidence"],
+            "properties": {
+              "spdx": {"type": "string", "minLength": 1},
+              "decision": {"enum": ["build", "internal_evaluation", "reference_only", "excluded"]},
+              "evidence": {"type": "array", "items": {"$ref": "#/$defs/fileEvidence"}}
+            }
+          },
+          "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "content_hash": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["algorithm", "value"],
+            "properties": {
+              "algorithm": {"const": "sha256-git-ls-tree-v1"},
+              "value": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            }
+          },
+          "build_docs": {"type": "boolean"},
+          "tests": {"type": "boolean"},
+          "status": {"enum": ["usable", "reference_only", "rejected"]},
+          "errors": {"type": "array", "items": {"type": "string", "minLength": 1}}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"status": {"const": "usable"}}},
+            "then": {
+              "required": ["revision", "content_hash", "build_docs", "tests"],
+              "properties": {
+                "covered_requirements": {"minItems": 1},
+                "match_evidence": {"minItems": 1},
+                "license": {"properties": {"decision": {"const": "build"}, "evidence": {"minItems": 1}}},
+                "errors": {"maxItems": 0}
+              }
+            }
+          },
+          {
+            "if": {"properties": {"status": {"const": "rejected"}}},
+            "then": {"properties": {"errors": {"minItems": 1}}}
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "fileEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

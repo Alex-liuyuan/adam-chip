@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ADAM accelerator contract",
+  "type": "object",
+  "required": ["schema", "target", "backends"],
+  "properties": {
+    "schema": {"type": "string"},
+    "target": {"type": "string"},
+    "backends": {"type": "array"},
+    "rvv": {"type": "object"},
+    "npu": {"type": "object"},
+    "not_claimed": {"type": "array"}
+  },
+  "additionalProperties": true
+}

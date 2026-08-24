@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.software-requirements.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "project_id", "hardware_ir_sha256", "board_identity", "software_roles", "components"],
+  "properties": {
+    "schema": {"const": "soc-image.software-requirements.v1"},
+    "project_id": {"type": "string", "minLength": 1},
+    "hardware_ir_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "board_identity": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "value", "state", "basis"],
+        "properties": {
+          "kind": {"enum": ["vendor", "board", "soc", "memory", "architecture"]},
+          "value": {"type": "string", "minLength": 1},
+          "state": {"enum": ["authoritative", "standard_derived", "board_observed", "candidate"]},
+          "basis": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "software_roles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "class", "compatible", "required_interfaces", "hardware_basis", "evidence_state", "search_terms", "reuse_allowed", "generated_mmio_allowed"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9,._+@-]+$"},
+          "class": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "compatible": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "required_interfaces": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+          "hardware_basis": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "evidence_state": {"enum": ["authoritative", "standard_derived", "board_observed", "candidate"]},
+          "search_terms": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "reuse_allowed": {"const": true},
+          "generated_mmio_allowed": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

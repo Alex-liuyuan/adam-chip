@@ -1,0 +1,152 @@
+{
+  "target": "Exactly 15 IEEE journal pages including references",
+  "reference_style": "REMAP operational exposition and design-rationale structure",
+  "iterations": [
+    {
+      "iteration": "style15_iter0",
+      "pages": 13,
+      "decision": "baseline",
+      "artifact": "refinement/style15_iter0/paper.pdf"
+    },
+    {
+      "iteration": "style15_iter1",
+      "pages": 15,
+      "decision": "accepted",
+      "addressed_weaknesses": [
+        "Made the architecture executable in prose through a staged end-to-end runtime procedure",
+        "Explained the rationale for joint admission, optimistic generation checks, logical completion, explicit ownership, epoch-cookie attribution, and full fallback re-admission",
+        "Added implementation-level state ownership and transition linearization"
+      ],
+      "integrated_answers": [
+        "Clarified when a qualified session becomes an admitted job",
+        "Clarified which state owns each transition and when a lease may be released",
+        "Clarified why fallback and trace cannot create alternate trust paths"
+      ],
+      "actions_taken": [
+        "Added an article-organization paragraph to the Introduction",
+        "Added End-to-End Runtime Procedure to AIRTOS Design",
+        "Added Design Rationale and Alternatives to AIRTOS Design",
+        "Added State Ownership and Transition Discipline to Implementation",
+        "Updated the submission guideline from 12 to 15 pages"
+      ],
+      "gates": {
+        "latex_compile": "pass",
+        "page_count": 15,
+        "orphan_citations": "pass",
+        "latex_sanity": "pass",
+        "anti_leakage": "pass",
+        "forbidden_prose": "pass",
+        "new_numeric_tokens": 0
+      },
+      "artifact": "refinement/style15_iter1/paper.pdf"
+    },
+    {
+      "iteration": "remap_style_iter1",
+      "pages": 15,
+      "decision": "ACCEPT_IMPROVED",
+      "score_trajectory": "78.0 -> 86.05",
+      "addressed_weaknesses": [
+        "Recast the abstract and introduction in direct IEEE journal prose",
+        "Standardized paragraphs around one topic sentence, evidence block, and conclusion",
+        "Added a three-part N1--N6 reading guide for the architecture figure",
+        "Reorganized all four statistical figures around their actual subpanels",
+        "Reframed discussion statements around supported operational results"
+      ],
+      "integrated_answers": [
+        "Mapped each innovation badge to its runtime mechanism and physical path",
+        "Explained each admission, memory, recovery, and timing panel in reading order",
+        "Mapped software, controlled-callback, and physical evidence layers to their evaluated statements"
+      ],
+      "actions_taken": [
+        "Rewrote the abstract and introduction",
+        "Expanded the architecture and contract-table explanations",
+        "Moved recovery and timing figures into their corresponding subsections",
+        "Rewrote every result caption with explicit subpanel descriptions",
+        "Reorganized Evaluation, Discussion, and Conclusion for claim-to-evidence flow"
+      ],
+      "gates": {
+        "latex_compile": "pass",
+        "page_count": 15,
+        "orphan_citations": "pass",
+        "latex_sanity": "pass",
+        "anti_leakage": "pass",
+        "forbidden_prose": "pass",
+        "new_numeric_tokens": 0,
+        "visual_pdf_review": "pass"
+      },
+      "artifact": "refinement/remap_style_iter1/paper.pdf"
+    },
+    {
+      "iteration": "main_figure_readability_iter1",
+      "pages": 15,
+      "decision": "accepted",
+      "actions_taken": [
+        "Refined the architecture figure through the PaperBanana image-editing pipeline",
+        "Changed the canvas and software regions to a visually pure white background",
+        "Enlarged anchor, innovation, and mechanism labels for double-column reading",
+        "Removed package-material labels, DDR signal names, repeated queue details, lifecycle numbers, recovery equations, and trace field lists",
+        "Preserved the K230/LPDDR4 physical dissection and N1--N6 mechanism chain",
+        "Aligned the figure caption and panel-order explanation with the simplified visual"
+      ],
+      "gates": {
+        "paperbanana_edit": "pass",
+        "double_column_visual_review": "pass",
+        "latex_compile": "pass",
+        "page_count": 15,
+        "figure_text_alignment": "pass"
+      },
+      "artifact": "final/figures/fig_airtos_main.png"
+    },
+    {
+      "iteration": "main_figure_selected_base_iter2",
+      "pages": 15,
+      "decision": "accepted",
+      "actions_taken": [
+        "Used fig_airtos_main_space_icons_yahei_candidate_1.png as the user-selected visual base",
+        "Regenerated the architecture exclusively through PaperBanana image refinement",
+        "Preserved the three-column large-icon style and physical K230/LPDDR4 dissection",
+        "Made qualified-session and live-state inputs converge at the N1 joint gate",
+        "Rendered bounded recovery as a single Cancel--Reset--epoch--health rail",
+        "Routed the pre-reset epoch-cookie completion to the comparator no-match path",
+        "Kept fallback re-admission and the N6 proposal-only trace outside alternate trust paths"
+      ],
+      "gates": {
+        "paperbanana_edit": "pass",
+        "selected_base_fidelity": "pass",
+        "n1_n6_mechanism_review": "pass",
+        "stale_event_origin_review": "pass",
+        "double_column_visual_review": "pass",
+        "latex_compile": "pass",
+        "page_count": 15
+      },
+      "artifact": "final/figures/fig_airtos_main.png"
+    },
+    {
+      "iteration": "main_figure_authority_mechanism_iter3",
+      "pages": 15,
+      "decision": "accepted",
+      "actions_taken": [
+        "Preserved the selected flat cool visual style and physical K230/LPDDR4 center",
+        "Reframed the figure around formation, use, consumption, and revocation of execution authority",
+        "Replaced the admission checklist with a private probe, all-job SimEDF+ replay, generation recheck, and single atomic publication mechanism",
+        "Made job visibility equivalent to lease visibility at the publication aperture",
+        "Bound dependency-ready EDF dispatch to an epoch-cookie-segment token and the physical ownership loop",
+        "Made stale completion rejection a causal proof from the reset epoch boundary to the exact-match comparator",
+        "Separated fallback re-admission from the non-self-certifying trace-to-compiler loop",
+        "Rewrote the caption and panel explanation around the authority-lifecycle invariant"
+      ],
+      "gates": {
+        "paperbanana_edit": "pass",
+        "selected_style_fidelity": "pass",
+        "causal_mechanism_review": "pass",
+        "atomicity_invariant_review": "pass",
+        "epoch_cookie_isolation_review": "pass",
+        "feedback_non_bypass_review": "pass",
+        "double_column_visual_review": "pass",
+        "latex_compile": "pass",
+        "page_count": 15
+      },
+      "artifact": "final/figures/fig_airtos_main.png"
+    }
+  ]
+}

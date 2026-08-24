@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.reference-profile.v1",
+  "title": "Automatically selected capability-coverage product profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "project_id", "hardware_ir_sha256", "product_class", "os_policy", "enabled_capabilities", "blocked_capabilities"],
+  "properties": {
+    "schema": {"const": "soc-image.reference-profile.v1"},
+    "project_id": {"type": "string", "minLength": 1},
+    "hardware_ir_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "product_class": {"const": "hardware_capability_coverage"},
+    "os_policy": {"const": "rt-thread"},
+    "enabled_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "basis"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "basis": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "blocked_capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "reason", "fields"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "reason": {"type": "string", "minLength": 1},
+          "fields": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    }
+  }
+}

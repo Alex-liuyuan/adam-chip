@@ -1,0 +1,275 @@
+{
+  "plotting_plan": [
+    {
+      "figure_id": "fig_airtos_main",
+      "title": "AIRTOS Architecture and Evidence Flow",
+      "plot_type": "diagram",
+      "data_source": "idea.md",
+      "objective": "PaperBanana-generated, icon-rich, flat-color systems diagram showing qualified plan production, the joint admission gate, heterogeneous governed execution, bounded recovery, and non-self-certifying trace feedback without gradients or shadows.",
+      "aspect_ratio": "3:2"
+    },
+    {
+      "figure_id": "fig_admission_atomicity_analysis",
+      "title": "Admission Correctness and Atomic Publication",
+      "plot_type": "plot",
+      "data_source": "experimental_log.md",
+      "objective": "Three-panel double-column plot using a stacked error bar chart, horizontal log-scale endpoint bars, and a horizontal stacked transaction bar to show admission correctness and 400,000 generation-checked concurrent publications.",
+      "aspect_ratio": "21:9"
+    },
+    {
+      "figure_id": "fig_memory_dma_analysis",
+      "title": "Memory Isolation and Physical Data Coherency",
+      "plot_type": "plot",
+      "data_source": "experimental_log.md",
+      "objective": "Three-panel double-column plot using a stacked lease-outcome bar, a log-scaled DMA latency line chart, and horizontal percentage bars for complete-path correctness and omission-control detection.",
+      "aspect_ratio": "21:9"
+    },
+    {
+      "figure_id": "fig_recovery_governance_analysis",
+      "title": "Recovery Closure, Trace Quality, and Short HIL",
+      "plot_type": "plot",
+      "data_source": "experimental_log.md",
+      "objective": "Four-panel double-column plot using horizontal log-scale endpoint bars, trace-metric bars, reopen-latency bars, and a temperature range plot for scoped short-HIL lifecycle evidence without pooling denominators.",
+      "aspect_ratio": "21:9"
+    },
+    {
+      "figure_id": "fig_timing_contract_analysis",
+      "title": "Timing-Evidence Applicability",
+      "plot_type": "plot",
+      "data_source": "experimental_log.md",
+      "objective": "Three-panel double-column plot using a WCET-sensitivity line chart, grouped board-timing bars, and a horizontal lollipop chart for the seven-operation control-path p99 audit.",
+      "aspect_ratio": "21:9"
+    }
+  ],
+  "intro_related_work_plan": {
+    "introduction_strategy": {
+      "hook_hypothesis": "Edge inference increasingly couples compiler-generated execution plans to heterogeneous resources whose timing, memory, coherency, and recovery states are visible only at runtime.",
+      "problem_gap_hypothesis": "Existing real-time scheduling, heterogeneous task runtimes, NPU multi-tenancy, and runtime assurance do not jointly bind compiler evidence and applicability to atomic memory-time admission and stale-event-safe recovery; the claim is restricted to the tested finite domain and single K230 board.",
+      "search_directions": [
+        "Foundational EDF and sporadic-task feasibility work establishing the assumptions behind deadline claims",
+        "Surveys and systems on heterogeneous DAG runtimes and accelerator operating-system abstractions",
+        "Edge-AI and NPU multi-tenant scheduling systems emphasizing latency, QoS, memory, and isolation",
+        "Runtime assurance and Simplex-style work separating high-performance execution from safety decisions",
+        "DMA ownership and cache-coherency specifications relevant to non-coherent edge accelerators"
+      ]
+    },
+    "related_work_strategy": {
+      "overview": "Separate scheduling theory, heterogeneous runtimes, accelerator sharing, and runtime assurance to position AIRTOS as a governance layer rather than a new EDF or generic RTOS.",
+      "subsections": [
+        {
+          "subsection_title": "Real-Time and Heterogeneous DAG Scheduling",
+          "methodology_cluster": "EDF feasibility analysis and heterogeneous task-graph scheduling",
+          "sota_investigation_mission": "Review work published before 2026-07-05 on EDF assumptions, processor-demand analysis, typed heterogeneous DAGs, and per-resource non-preemptive scheduling.",
+          "limitation_hypothesis": "Task and DAG schedulers generally assume jobs and execution bounds are already trusted and do not bind compiler evidence, leases, coherency, and recovery into admission.",
+          "limitation_search_queries": [
+            "heterogeneous real-time DAG scheduling WCET non-preemptive accelerator",
+            "EDF admission control running residual blocking sporadic reservation"
+          ],
+          "bridge_to_our_method": "AIRTOS retains per-resource EDF as a mechanism but places it inside a broader evidence-constrained admission transaction."
+        },
+        {
+          "subsection_title": "Accelerator Runtimes and Multi-Tenant AI",
+          "methodology_cluster": "OS accelerator abstractions, task runtimes, and NPU/GPU multi-tenancy",
+          "sota_investigation_mission": "Review work published before 2026-07-05 on PTask, StarPU, Legion, PREMA, Planaria, MoCA, DREAM, Clockwork, and related resource-sharing systems.",
+          "limitation_hypothesis": "These systems optimize scheduling, utilization, or QoS but do not expose a consumer-checkable plan-evidence predicate coupled to memory-time atomicity and recovery generations.",
+          "limitation_search_queries": [
+            "NPU multi tenancy scheduling recovery stale completion event",
+            "accelerator runtime memory sharing QoS admission control edge AI"
+          ],
+          "bridge_to_our_method": "AIRTOS treats an evidence-carrying plan, rather than an opaque kernel request, as the admitted runtime object."
+        },
+        {
+          "subsection_title": "Runtime Assurance, Coherency, and Recovery",
+          "methodology_cluster": "Runtime assurance, safe fallback, DMA ownership, and fault recovery",
+          "sota_investigation_mission": "Review work and official specifications published before 2026-07-05 on Simplex/runtime assurance, DMA fences, cache ownership, and RTOS deadline APIs.",
+          "limitation_hypothesis": "Safety filters and DMA specifications define important mechanisms but do not jointly attribute late completions by epoch and cookie or require fallback plans to pass the full original gate.",
+          "limitation_search_queries": [
+            "runtime assurance Simplex fallback revalidation real-time systems",
+            "DMA cache ownership stale interrupt reset generation cookie"
+          ],
+          "bridge_to_our_method": "AIRTOS combines explicit plan-driven ownership transitions with generation-scoped completion and bounded, re-admitted recovery."
+        }
+      ]
+    }
+  },
+  "section_plan": [
+    {
+      "section_title": "Abstract",
+      "subsections": []
+    },
+    {
+      "section_title": "System Model and Problem Formulation",
+      "subsections": [
+        {
+          "subsection_title": "Jobs, Plans, and Runtime State",
+          "content_bullets": [
+            "Define jobs and segments exactly from idea.md, including CPU, RVV, NPU, and DMA resources, predecessor sets, registered bounds, lease-relative ranges, and coherency flags.",
+            "State readiness and per-resource non-preemptive EDF semantics without presenting EDF itself as a contribution."
+          ],
+          "citation_hints": [
+            "Liu and Layland (Scheduling Algorithms for Multiprogramming in a Hard-Real-Time Environment)",
+            "Topcuoglu et al. (Performance-Effective and Low-Complexity Task Scheduling for Heterogeneous Computing)"
+          ]
+        },
+        {
+          "subsection_title": "Evidence-Constrained Admission",
+          "content_bullets": [
+            "Formalize the nine-term Admit predicate from idea.md and explain that Sched is conditional on registered WCET, arrivals, blocking, coherency, and recovery charges.",
+            "Define completion acceptance by matching device, epoch, active job, and cookie."
+          ],
+          "citation_hints": [
+            "Baruah et al. (Algorithms and Complexity Concerning the Preemptive Scheduling of Periodic, Real-Time Tasks on One Processor)",
+            "Hobbs et al. (Runtime Assurance)"
+          ]
+        }
+      ]
+    },
+    {
+      "section_title": "AIRTOS Design",
+      "subsections": [
+        {
+          "subsection_title": "Atomic Lease and Schedule Admission",
+          "content_bullets": [
+            "Explain probe, snapshot, SimEDF+, generation validation, commit, retry, and rollback using the atomic transaction evidence in experimental_log.md.",
+            "Explain why rechecking all admitted deadlines prevents candidate-only false admission."
+          ],
+          "citation_hints": [
+            "Yu and Chowdhury (Salus: Fine-Grained GPU Sharing Primitives for Deep Learning Applications)"
+          ]
+        },
+        {
+          "subsection_title": "Resource and Coherency Governance",
+          "content_bullets": [
+            "Describe dependency-ready per-resource queues, non-preemptive devices, lease isolation, and plan-driven clean/invalidate/barrier actions.",
+            "Use Figure fig_airtos_main and distinguish supported K230 coherency evidence from general hardware claims."
+          ],
+          "citation_hints": [
+            "Augonnet et al. (StarPU: A Unified Platform for Task Scheduling on Heterogeneous Multicore Architectures)",
+            "Linux kernel documentation (Dynamic DMA mapping Guide)"
+          ]
+        },
+        {
+          "subsection_title": "Epoch-Scoped Recovery and Feedback",
+          "content_bullets": [
+            "Define stale-event rejection, bounded reset attempts, quarantine, and full fallback re-admission using Figure fig_airtos_main.",
+            "Explain that trace may propose the next experiment but cannot self-certify or alter evidence."
+          ],
+          "citation_hints": [
+            "Seto et al. (An Approach to Fault Tolerant Control: The Simplex Architecture)",
+            "Leucker and Schallhart (A Brief Account of Runtime Verification)"
+          ]
+        }
+      ]
+    },
+    {
+      "section_title": "Implementation",
+      "subsections": [
+        {
+          "subsection_title": "Production Runtime Paths",
+          "content_bullets": [
+            "Map the design to the exact production modules listed in idea.md without revealing local absolute paths.",
+            "Describe the generation counters and trace attribution fields at an implementation level."
+          ],
+          "citation_hints": []
+        },
+        {
+          "subsection_title": "K230 Integration",
+          "content_bullets": [
+            "Describe one CanMV-K230-LP4 V3.0 board, RT-Smart, Add+ReLU, CPU fallback, RVV primary, and physical DMA paths.",
+            "State explicitly that no general NPU path, hard reset, power, or cross-board study was executed."
+          ],
+          "citation_hints": [
+            "research paper or technical report introducing 'TensorFlow Lite for Microcontrollers'"
+          ]
+        }
+      ]
+    },
+    {
+      "section_title": "Experimental Methodology",
+      "subsections": [
+        {
+          "subsection_title": "Preregistered Questions and Oracles",
+          "content_bullets": [
+            "Explain the four experimental cores, zero-tolerance safety endpoints, independent scheduling oracle, negative coherency controls, and exact timing-contract audit from experimental_log.md.",
+            "Use Figures fig_admission_atomicity_analysis, fig_memory_dma_analysis, fig_recovery_governance_analysis, and fig_timing_contract_analysis with their distinct denominators and claim-specific endpoints."
+          ],
+          "citation_hints": [
+            "Barr et al. (The Oracle Problem in Software Testing: A Survey)"
+          ]
+        },
+        {
+          "subsection_title": "Physical Platform and Measurement Discipline",
+          "content_bullets": [
+            "Record plan WCETs, deadline, corpus size, transfer sizes, run duration, and final temperature exactly.",
+            "Separate finite implementation consistency, physical coherency, model-valid timing, and short-duration HIL evidence."
+          ],
+          "citation_hints": [
+            "Banbury et al. (MLPerf Tiny Benchmark)"
+          ]
+        }
+      ]
+    },
+    {
+      "section_title": "Evaluation",
+      "subsections": [
+        {
+          "subsection_title": "Admission and Scheduling Consistency",
+          "content_bullets": [
+            "Report all Core-1 and Core-2 counts, zero failures, accepted/rejected transactions, and schedule-oracle agreement.",
+            "Avoid interpreting an acceptance ratio as a performance advantage because the corpus was constructed for validation."
+          ],
+          "citation_hints": []
+        },
+        {
+          "subsection_title": "Memory and Physical Coherency",
+          "content_bullets": [
+            "Report allocator attempts, successful leases, physical transfer counts, negative controls, and size-dependent mean transfer times.",
+            "Restrict the conclusion to the tested K230 configuration."
+          ],
+          "citation_hints": []
+        },
+        {
+          "subsection_title": "Recovery and Short-Duration HIL",
+          "content_bullets": [
+            "Report stale, recovery, budget, fallback, trace, lifecycle, and 24-minute run results exactly.",
+            "Clarify that injected stale events are not real late IRQs and reopen/reinitialize is not a hard reset."
+          ],
+          "citation_hints": []
+        },
+        {
+          "subsection_title": "Timing Contract Audit",
+          "content_bullets": [
+            "Use Figure fig_timing_contract_analysis to show p99 values below bounds but maxima above both WCETs.",
+            "Conclude that hard-real-time behavior is not established and that the strict 5-percent overhead criterion failed."
+          ],
+          "citation_hints": []
+        }
+      ]
+    },
+    {
+      "section_title": "Discussion",
+      "subsections": [
+        {
+          "subsection_title": "What the Evidence Supports",
+          "content_bullets": [
+            "Synthesize finite-domain consistency, atomicity, physical coherency on one board, and bounded state-machine behavior.",
+            "Explain why trace evidence cannot discharge its own obligations."
+          ],
+          "citation_hints": []
+        },
+        {
+          "subsection_title": "Validity Boundaries",
+          "content_bullets": [
+            "State every claim boundary in idea.md without hiding the negative timing finding.",
+            "Separate theorem assumptions from measured platform behavior."
+          ],
+          "citation_hints": []
+        }
+      ]
+    },
+    {
+      "section_title": "Conclusion",
+      "subsections": []
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "adam.k230.image_contract.v1",
+  "target": "canmv_k230_lp4_v3",
+  "board": "CanMV-K230-LP4-V3.0",
+  "sector_bytes": 512,
+  "image_size_bytes": 650117120,
+  "pre_partition_boot_region": {
+    "size_bytes": 115343360,
+    "sha256": "f403e482b44c0752d888024b603db059b37df78455c0f6ff158a9176cc4bcb00",
+    "required_strings": [
+      "U-Boot SPL",
+      "lpddr4",
+      "k230_load_img",
+      "k230_run_system",
+      "mmc_init",
+      "sdhci_init",
+      "board=k230_canmv_v3p0"
+    ]
+  },
+  "partitions": [
+    {
+      "index": 1,
+      "type_hex": "0x0c",
+      "start_lba": 225280,
+      "sectors": 20480,
+      "role": "camera_config",
+      "required_files": ["config.txt"],
+      "required_name_fragments": ["gc2093", "bf3238", "ov5647"],
+      "min_json_files": 18
+    },
+    {
+      "index": 2,
+      "type_hex": "0x0c",
+      "start_lba": 245760,
+      "sectors": 1024000,
+      "role": "micropython_app_data",
+      "required_files": [
+        "revision.txt",
+        "libs/AI2D.py",
+        "libs/Utils.py",
+        "libs/PipeLine.py",
+        "libs/AIBase.py",
+        "libs/YOLO.py"
+      ],
+      "required_dirs": [
+        "examples",
+        "examples/kmodel"
+      ],
+      "min_python_files": 100,
+      "min_kmodel_files": 1
+    }
+  ],
+  "not_claimed": [
+    "Matching this contract proves official-style image structure, not project ownership of the boot chain.",
+    "A derived image that preserves the boot-region hash remains dependent on the official boot chain."
+  ]
+}

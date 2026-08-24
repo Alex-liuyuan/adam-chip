@@ -1,0 +1,30 @@
+{
+  "schema": "soc-image.source-policy.v1",
+  "mandatory_roles": ["boot", "bsp", "driver", "os", "toolchain", "compiler", "runtime", "product", "image_tool"],
+  "build_licenses": ["Apache-2.0", "BSD-2-Clause", "GPL-2.0-or-later", "MIT"],
+  "reference_stacks": [
+    {
+      "id": "canmv-k230-v1.8",
+      "decision": "internal_evaluation",
+      "selectors": ["canmv-k230", "k230"],
+      "workspace": "third_party/canmv-v1.8-editable",
+      "manifest": "products/sysuos_k230_v3p0/manifest.lock.xml",
+      "expected_repositories": 20
+    }
+  ],
+  "candidates": [
+    {"id": "k230-sdk", "url": "https://github.com/kendryte/k230_sdk.git", "roles": ["boot", "bsp", "driver", "os", "runtime", "image_tool"], "selectors": ["k230", "kendryte", "canaan", "maix3"], "license": "BSD-2-Clause", "os_abi": "rt-smart", "media_abi": "k230-mpp", "license_files": ["LICENSE"], "sparse_paths": ["Makefile", "Kconfig", "Kconfig.toolchain", "parse.mak", "repo.mak", "board", "configs", "src", "tools"]},
+    {"id": "canmv-k230", "url": "https://github.com/kendryte/canmv_k230.git", "roles": ["boot", "bsp", "driver", "os", "runtime", "product", "image_tool"], "selectors": ["canmv-k230", "canmv", "k230"], "license": "NOASSERTION", "disposition": "internal_evaluation", "os_abi": "rt-smart", "media_abi": "k230-mpp", "license_files": [], "sparse_paths": ["boards/k230_canmv_v3p0", "configs", "src", "tools"]},
+    {"id": "rt-thread", "url": "https://github.com/RT-Thread/rt-thread.git", "roles": ["boot", "bsp", "driver", "os", "runtime", "image_tool"], "selectors": ["qemu", "virt", "risc-v", "riscv", "rv32", "rv64", "arm", "cortex"], "license": "Apache-2.0", "os_abi": "rt-thread", "license_files": ["LICENSE"], "sparse_paths": ["components", "include", "libcpu", "src", "tools", "Kconfig"]},
+    {"id": "rtthread-micropython", "url": "https://github.com/RT-Thread-packages/micropython.git", "revision": "97e1a5f1435ef0d24ad92b15fa31878c8f684c84", "roles": ["product"], "selectors": ["rt-thread", "micropython", "risc-v", "riscv", "arm"], "license": "MIT", "os_abi": "rt-thread", "license_files": ["LICENSE"], "sparse_paths": ["extmod", "lib", "port", "py", "SConscript"], "source_usage": "target", "companion_sources": ["micropython-upstream", "micropython-stubber", "openmv"]},
+    {"id": "micropython-upstream", "url": "https://github.com/micropython/micropython.git", "revision": "06bcfd5b74c6d275ae0991a19dab8704299e4e05", "roles": ["product"], "selectors": ["rt-thread", "micropython"], "license": "MIT", "disposition": "internal_evaluation", "license_files": ["LICENSE"], "sparse_paths": ["py", "tests", "tools"], "source_usage": "build_tool"},
+    {"id": "micropython-stubber", "url": "https://github.com/Josverl/micropython-stubber.git", "revision": "140b614a306e8ce76214ed62bc0da3a0c86038bd", "roles": ["product"], "selectors": ["rt-thread", "micropython"], "license": "MIT", "disposition": "reference_only", "license_files": ["LICENSE"], "sparse_paths": ["data/schema", "docs", "mip/v6", "src/stubber/board"], "source_usage": "verification_tool"},
+    {"id": "openmv", "url": "https://github.com/openmv/openmv.git", "revision": "be63fec4fba63accdb47f2c4ffbf84017555e538", "roles": ["product"], "selectors": ["rt-thread", "micropython", "camera"], "license": "MIXED", "disposition": "reference_only", "license_files": ["README.md", "ports/alif/LICENSE"], "sparse_paths": ["common", "drivers/sensors", "lib/imlib", "modules", "ports", "protocol"], "source_usage": "reference_only"},
+    {"id": "tvm", "url": "https://github.com/apache/tvm.git", "roles": ["compiler"], "selectors": ["ai", "npu", "kpu", "risc-v", "riscv", "arm"], "license": "Apache-2.0", "license_files": ["LICENSE", "NOTICE"], "sparse_paths": ["include", "python/tvm", "src", "CMakeLists.txt"]},
+    {"id": "u-boot", "url": "https://github.com/u-boot/u-boot.git", "roles": ["boot"], "selectors": ["risc-v", "riscv", "arm", "sd", "emmc", "spi"], "license": "GPL-2.0-or-later", "license_files": ["Licenses/README"], "sparse_paths": ["arch", "board", "common", "configs", "drivers", "include", "Makefile"]},
+    {"id": "opensbi", "url": "https://github.com/riscv-software-src/opensbi.git", "roles": ["boot", "runtime"], "selectors": ["risc-v", "riscv", "rv32", "rv64"], "license": "BSD-2-Clause", "license_files": ["COPYING.BSD"], "sparse_paths": ["firmware", "include", "lib", "platform", "Makefile"]},
+    {"id": "genimage", "url": "https://github.com/pengutronix/genimage.git", "roles": ["image_tool"], "selectors": ["*", "sd", "emmc", "nand", "nor", "spi", "image"], "license": "GPL-2.0-or-later", "license_files": ["COPYING"], "sparse_paths": ["genimage.c", "test", "configure.ac"]},
+    {"id": "tinyusb", "url": "https://github.com/hathach/tinyusb.git", "roles": ["driver"], "selectors": ["usb"], "license": "MIT", "license_files": ["LICENSE"], "sparse_paths": ["src", "hw/bsp"]},
+    {"id": "riscv-gnu-toolchain", "url": "https://github.com/riscv-collab/riscv-gnu-toolchain.git", "roles": ["toolchain"], "selectors": ["risc-v", "riscv", "rv32", "rv64", "k230"], "license": "GPL-2.0-or-later", "license_files": ["LICENSE"], "sparse_paths": ["README.md", "configure"]}
+  ]
+}

@@ -1,0 +1,11 @@
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('src/*.c')
+src += Glob('src/object/*.c')
+src += Glob('src/service/*.c')
+src += Glob('src/memory/*.c')
+CPPPATH = [cwd + '/include']
+
+group = DefineGroup('rvaic', src, depend=['PKG_USING_RVAIC'], CPPPATH=CPPPATH)
+Return('group')

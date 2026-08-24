@@ -1,0 +1,14 @@
+{
+  "base": null,
+  "board": "canmv_k230_v3p0",
+  "schema": "sysuos.adaptation-plan.v1",
+  "soc": "k230",
+  "stable_components": ["micropython", "sysu_compat", "rt_ai", "compiler_runtime"],
+  "tasks": [
+    {"action": "replace", "base_implementation": null, "id": "provider:boot", "owned_paths": ["providers/boot", "tests/boot"], "provider": "boot", "required_outputs": ["providers/boot/provider.json", "tests/boot/smoke.py"], "status": "blocked"},
+    {"action": "replace", "base_implementation": null, "id": "provider:device", "owned_paths": ["providers/device", "tests/device"], "provider": "device", "required_outputs": ["providers/device/provider.json", "tests/device/smoke.py"], "status": "blocked"},
+    {"action": "replace", "base_implementation": null, "id": "provider:media", "owned_paths": ["providers/media", "tests/media"], "provider": "media", "required_outputs": ["providers/media/provider.json", "tests/media/smoke.py"], "status": "blocked"},
+    {"action": "replace", "base_implementation": null, "id": "provider:accelerator", "owned_paths": ["providers/accelerator", "tests/accelerator"], "provider": "accelerator", "required_outputs": ["providers/accelerator/provider.json", "tests/accelerator/smoke.py"], "status": "blocked"},
+    {"action": "replace", "base_implementation": null, "id": "provider:image", "owned_paths": ["providers/image", "tests/image"], "provider": "image", "required_outputs": ["providers/image/provider.json", "tests/image/smoke.py"], "status": "blocked"}
+  ]
+}

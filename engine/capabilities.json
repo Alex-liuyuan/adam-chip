@@ -1,0 +1,337 @@
+{
+  "schema": "soc-image.capability-registry.v1",
+  "capabilities": [
+    {
+      "id": "hardware_contract_summary",
+      "depends_on": [],
+      "activates_on": [],
+      "provider": {
+        "agent": "HardwareAgent",
+        "tool": "write_contract_summary",
+        "verify_tool": "verify_contract_summary",
+        "owned_paths": ["generated/control"],
+        "outputs": ["generated/control/hardware_contract_summary.json"]
+      }
+    },
+    {
+      "id": "source_discovery",
+      "depends_on": ["hardware_contract_summary"],
+      "activates_on": [],
+      "provider": {
+        "agent": "SourceDiscoveryAgent",
+        "tool": "generate_source_discovery",
+        "verify_tool": "verify_source_discovery",
+        "owned_paths": ["generated/sources"],
+        "outputs": [
+          "generated/sources/manifest.json",
+          "generated/sources/queries.json",
+          "generated/sources/requirements.json",
+          "generated/sources/candidates.json",
+          "generated/sources/selection.json",
+          "generated/sources/reuse_plan.json",
+          "generated/sources/source.lock.json",
+          "generated/sources/license_report.json",
+          "generated/sources/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "boot_bsp",
+      "depends_on": ["source_discovery"],
+      "activates_on": ["cpu_execution", "runtime_memory", "console_uart", "interrupt_controller"],
+      "provider": {
+        "agent": "BootBspAgent",
+        "tool": "generate_boot_bsp",
+        "verify_tool": "verify_boot_bsp",
+        "owned_paths": ["generated/platform"],
+        "outputs": [
+          "generated/platform/manifest.json",
+          "generated/platform/boot/startup.S",
+          "generated/platform/boot/trap.S",
+          "generated/platform/boot/link.lds",
+          "generated/platform/boot/opensbi/build.conf",
+          "generated/platform/boot/u-boot/fragment.config",
+          "generated/platform/rtthread/SConstruct",
+          "generated/platform/rtthread/SConscript",
+          "generated/platform/rtthread/rtconfig.py",
+          "generated/platform/rtthread/rtconfig.h",
+          "generated/platform/rtthread/board.h",
+          "generated/platform/rtthread/board.c",
+          "generated/platform/rtthread/main.c",
+          "generated/platform/rtthread/Makefile",
+          "generated/platform/build/rtthread.elf",
+          "generated/platform/build/rtthread.bin",
+          "generated/platform/build/qemu.log",
+          "generated/platform/build/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "source_stack_image",
+      "depends_on": ["source_discovery"],
+      "activates_on": [],
+      "material_selectors": ["k230"],
+      "provider": {
+        "agent": "SourceStackAgent",
+        "tool": "generate_source_stack_image",
+        "verify_tool": "verify_source_stack_image",
+        "owned_paths": ["generated/source_stack"],
+        "outputs": [
+          "generated/source_stack/manifest.json",
+          "generated/source_stack/capability_coverage.json",
+          "generated/source_stack/verification.json"
+        ],
+        "artifact_outputs": ["sdk.img", "build.log"]
+      }
+    },
+    {
+      "id": "canmv_evaluation_image",
+      "depends_on": ["source_discovery"],
+      "activates_on": [],
+      "material_selectors": ["k230", "canmv"],
+      "provider": {
+        "agent": "SourceDiscoveryAgent",
+        "tool": "generate_canmv_evaluation_image",
+        "verify_tool": "verify_canmv_evaluation_image",
+        "owned_paths": ["generated/evaluation/canmv"],
+        "outputs": [
+          "generated/evaluation/canmv/manifest.json",
+          "generated/evaluation/canmv/verification.json"
+        ],
+        "internal_artifact_outputs": [
+          "internal_evaluation/SYSUOS_K230_V3P0.img",
+          "internal_evaluation/SYSUOS_K230_V3P0-build.log"
+        ]
+      }
+    },
+    {
+      "id": "contract_drivers",
+      "depends_on": ["boot_bsp"],
+      "activates_on": ["cpu_execution", "runtime_memory", "console_uart", "interrupt_controller", "dma"],
+      "provider": {
+        "agent": "DriverAgent",
+        "tool": "generate_contract_drivers",
+        "verify_tool": "verify_contract_drivers",
+        "owned_paths": ["generated/drivers"],
+        "outputs": [
+          "generated/drivers/manifest.json",
+          "generated/drivers/include/soc_regs.h",
+          "generated/drivers/include/soc_driver.h",
+          "generated/drivers/src/soc_driver.c",
+          "generated/drivers/src/mmio_target.c"
+        ]
+      }
+    },
+    {
+      "id": "simulation_models",
+      "depends_on": ["contract_drivers"],
+      "activates_on": ["cpu_execution", "runtime_memory", "console_uart", "interrupt_controller", "dma"],
+      "provider": {
+        "agent": "SimulationAgent",
+        "tool": "generate_simulation_models",
+        "verify_tool": "verify_simulation_models",
+        "owned_paths": ["generated/simulation"],
+        "outputs": [
+          "generated/simulation/manifest.json",
+          "generated/simulation/platform.repl",
+          "generated/simulation/host/mmio_model.c",
+          "generated/simulation/host/test_drivers.c",
+          "generated/simulation/build/driver_tests",
+          "generated/simulation/build/host.log",
+          "generated/simulation/build/qemu.log",
+          "generated/simulation/build/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "rt_ai_os",
+      "depends_on": ["simulation_models"],
+      "activates_on": ["cpu_execution", "runtime_memory", "dma", "cache_coherency"],
+      "provider": {
+        "agent": "RtAiOsAgent",
+        "tool": "generate_rt_ai_os",
+        "verify_tool": "verify_rt_ai_os",
+        "owned_paths": ["generated/rt_ai/os"],
+        "outputs": [
+          "generated/rt_ai/os/manifest.json",
+          "generated/rt_ai/os/Kconfig",
+          "generated/rt_ai/os/SConscript",
+          "generated/rt_ai/os/include/rt_ai.h",
+          "generated/rt_ai/os/include/rt_ai_internal.h",
+          "generated/rt_ai/os/include/rt_ai_target.h",
+          "generated/rt_ai/os/src/resource_queue.c",
+          "generated/rt_ai/os/src/plan_select.c",
+          "generated/rt_ai/os/src/admission.c",
+          "generated/rt_ai/os/src/sim_edf.c",
+          "generated/rt_ai/os/src/tensor_memory.c",
+          "generated/rt_ai/os/src/coherency.c",
+          "generated/rt_ai/os/src/recovery.c",
+          "generated/rt_ai/os/src/trace.c",
+          "generated/rt_ai/os/src/coordinator.c",
+          "generated/rt_ai/os/src/rt_ai_port_rtthread.c"
+        ]
+      }
+    },
+    {
+      "id": "rt_ai_runtime",
+      "depends_on": ["rt_ai_os"],
+      "activates_on": ["cpu_execution", "runtime_memory", "dma", "cache_coherency"],
+      "provider": {
+        "agent": "RuntimeAgent",
+        "tool": "generate_rt_ai_runtime",
+        "verify_tool": "verify_rt_ai_runtime",
+        "owned_paths": ["generated/rt_ai/runtime"],
+        "outputs": [
+          "generated/rt_ai/runtime/manifest.json",
+          "generated/rt_ai/runtime/src/aeg_loader.c",
+          "generated/rt_ai/runtime/src/evidence.c",
+          "generated/rt_ai/runtime/src/session.c",
+          "generated/rt_ai/runtime/src/rt_ai_port_host.c",
+          "generated/rt_ai/runtime/tests/test_rt_ai.c",
+          "generated/rt_ai/runtime/tests/oracle_driver.c",
+          "generated/rt_ai/runtime/tests/oracle.py",
+          "generated/rt_ai/runtime/build/test_rt_ai",
+          "generated/rt_ai/runtime/build/oracle_driver",
+          "generated/rt_ai/runtime/build/oracle.log",
+          "generated/rt_ai/runtime/build/host.log",
+          "generated/rt_ai/runtime/build/trace.json",
+          "generated/rt_ai/runtime/build/trace_metrics.json",
+          "generated/rt_ai/runtime/build/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "tvm_ai_compiler",
+      "depends_on": ["rt_ai_runtime"],
+      "activates_on": ["cpu_execution", "runtime_memory", "rvv"],
+      "provider": {
+        "agent": "CompilerAgent",
+        "tool": "generate_tvm_ai_compiler",
+        "verify_tool": "verify_tvm_ai_compiler",
+        "owned_paths": ["generated/compiler"],
+        "outputs": [
+          "generated/compiler/manifest.json",
+          "generated/compiler/compiler.py",
+          "generated/compiler/plan_v2.py",
+          "generated/compiler/target.json",
+          "generated/compiler/aot_runner.c",
+          "generated/compiler/rvv_kernel.c",
+          "generated/compiler/aeg_check.c",
+          "generated/compiler/model.onnx",
+          "generated/compiler/relax_ir.py",
+          "generated/compiler/stir_ir.py",
+          "generated/compiler/cpu_model.c",
+          "generated/compiler/rvv_model.c",
+          "generated/compiler/rvv_tensorize_trace.txt",
+          "generated/compiler/cost.db",
+          "generated/compiler/plan.json",
+          "generated/compiler/search_plan.json",
+          "generated/compiler/evidence.json",
+          "generated/compiler/airtos_policy.json",
+          "generated/compiler/npu_blocker.json",
+          "generated/compiler/model.aeg",
+          "generated/compiler/aeg_debug.json",
+          "generated/compiler/cpu_aot",
+          "generated/compiler/rvv_aot",
+          "generated/compiler/cpu_output.txt",
+          "generated/compiler/rvv_output.txt",
+          "generated/compiler/ort_output.txt",
+          "generated/compiler/rvv_objdump.txt",
+          "generated/compiler/aeg_check",
+          "generated/compiler/aeg_check.log",
+          "generated/compiler/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "cecap_airtos_integration",
+      "depends_on": ["rt_ai_runtime", "tvm_ai_compiler"],
+      "activates_on": ["cpu_execution", "runtime_memory", "dma", "cache_coherency", "rvv"],
+      "provider": {
+        "agent": "CecapAirtosAgent",
+        "tool": "generate_cecap_airtos_integration",
+        "verify_tool": "verify_cecap_airtos_integration",
+        "owned_paths": ["generated/cecap_airtos"],
+        "outputs": [
+          "generated/cecap_airtos/manifest.json",
+          "generated/cecap_airtos/deployment.json",
+          "generated/cecap_airtos/feedback_contract.json",
+          "generated/cecap_airtos/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "product_layer",
+      "depends_on": ["cecap_airtos_integration"],
+      "activates_on": ["cpu_execution", "runtime_memory", "console_uart", "dma", "rvv"],
+      "provider": {
+        "agent": "ProductAgent",
+        "tool": "generate_product_layer",
+        "verify_tool": "verify_product_layer",
+        "owned_paths": ["generated/product"],
+        "outputs": [
+          "generated/product/manifest.json",
+          "generated/product/capability_matrix.json",
+          "generated/product/include/soc_product.h",
+          "generated/product/src/soc_product.c",
+          "generated/product/src/modsoc_image.c",
+          "generated/product/src/model_aeg.h",
+          "generated/product/src/model_aeg.c",
+          "generated/product/src/cecap_trust.h",
+          "generated/product/src/cecap_trust.c",
+          "generated/product/micropython/SConscript",
+          "generated/product/micropython/port/mpconfigport.h",
+          "generated/product/micropython/port/genhdr/qstrdefs.generated.h",
+          "generated/product/apps/diagnostics.py",
+          "generated/product/apps/uart_smoke.py",
+          "generated/product/apps/dma_smoke.py",
+          "generated/product/apps/ai_smoke.py",
+          "generated/product/build/product_smoke",
+          "generated/product/build/product_smoke.log",
+          "generated/product/build/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "source_image",
+      "depends_on": ["product_layer"],
+      "activates_on": ["cpu_execution", "runtime_memory", "console_uart", "dma", "rvv"],
+      "provider": {
+        "agent": "ImageAgent",
+        "tool": "generate_source_image",
+        "verify_tool": "verify_source_image",
+        "owned_paths": ["generated/image"],
+        "outputs": [
+          "generated/image/manifest.json",
+          "generated/image/sdk.img",
+          "generated/image/layout.json",
+          "generated/image/component_manifest.json",
+          "generated/image/ancestry.json",
+          "generated/image/unpack_image.py",
+          "generated/image/build/verification.json"
+        ]
+      }
+    },
+    {
+      "id": "hil_harness_verification",
+      "depends_on": ["source_image"],
+      "activates_on": ["cpu_execution", "runtime_memory", "console_uart", "dma", "rvv"],
+      "provider": {
+        "agent": "VerificationAgent",
+        "tool": "generate_hil_verification",
+        "verify_tool": "verify_hil_verification",
+        "owned_paths": ["generated/verification"],
+        "outputs": [
+          "generated/verification/manifest.json",
+          "generated/verification/lab_runner.py",
+          "generated/verification/device_inventory.json",
+          "generated/verification/board_binding.json",
+          "generated/verification/repair_policy.json",
+          "generated/verification/physical_hil.json",
+          "generated/verification/build/emulated_hil.log",
+          "generated/verification/build/verification.json"
+        ]
+      }
+    }
+  ]
+}

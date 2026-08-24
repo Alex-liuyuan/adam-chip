@@ -1,0 +1,23 @@
+{
+  "schema": "soc-image.reference-artifact.v1",
+  "name": "k230-canmv-v3-candidate-20260730",
+  "role": "reference_only",
+  "build_input_allowed": false,
+  "path": "output/k230_canmv_v3p0_flash_20260730/sdk.img",
+  "sha256": "1389e00ab29d95cb2592f61c0ead503adbb97f08999f8175f1decf8b41361baf",
+  "bytes": 650117120,
+  "source": "ReleaseAgent candidate output created on 2026-07-30",
+  "physical_release_ready": false,
+  "allowed_uses": [
+    "black_box_structure_comparison",
+    "black_box_functional_regression",
+    "black_box_performance_regression"
+  ],
+  "prohibited_uses": [
+    "build_input",
+    "boot_region_source",
+    "partition_payload_source",
+    "overlay_base",
+    "firmware_component_source"
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "schema": "adam.agent_roles.v1",
+  "roles": [
+    {
+      "name": "SpecificationAgent",
+      "human_role": "chip specification and system architecture engineer",
+      "mission": "Convert authoritative hardware material into conflict-checked contracts without guessed fields.",
+      "owned_paths": [
+        "contracts",
+        "importers",
+        "platforms",
+        "targets"
+      ],
+      "independent_verifier": false,
+      "actions": [
+        {
+          "id": "IngestHardwareDocuments",
+          "tool": "tools/hardware_document_import.py",
+          "third_party": [
+            "poppler-utils"
+          ],
+          "inputs": [
+            "trm",
+            "schematic"
+          ],
+          "outputs": [
+            "document_index",
+            "field_provenance",
+            "unknown_fields"
+          ],
+          "evidence": [
+            "hardware_document_index_pass"
+          ]
+        },
+        {
+          "id": "ImportSvd",
+          "tool": "importers/svd_importer.py",
+          "third_party": [
+            "open-cmsis-pack-spec"
+          ],
+          "inputs": [
+            "svd"
+          ],
+          "outputs": [
+            "svd_contract_draft"
+          ],
+          "evidence": [
+            "svd_import_pass"
+          ]
+        },
+        {
+          "id": "ImportDts",
+          "tool": "importers/dts_importer.py",
+          "third_party": [
+            "zephyr",
+            "dtc"
+          ],
+          "inputs": [
+            "dts"
+          ],
+          "outputs": [
+            "dts_contract_draft"
+          ],
+          "evidence": [
+            "dts_import_pass"
+          ]
+        },
+        {
+          "id": "ImportCmsisPack",
+          "tool": "importers/cmsis_pack_importer.py",
+          "third_party": [
+            "open-cmsis-pack-devtools"
+          ],
+          "inputs": [
+            "cmsis_pack"
+          ],
+          "outputs": [
+            "pack_contract_draft"
+          ],
+          "evidence": [
+            "cmsis_pack_import_pass"
+          ]
+        },
+        {
+          "id": "ImportPlatformIo",
+          "tool": "importers/platformio_importer.py",
+          "third_party": [
+            "platformio-core"
+          ],
+          "inputs": [
+            "platformio"
+          ],
+          "outputs": [
+            "platformio_contract_draft"
+          ],
+          "evidence": [
+            "platformio_import_pass"
+          ]
+        },
+        {
+          "id": "MergeContract",
+          "tool": "importers/merge_contract.py",
+          "third_party": [
+            "systemrdl-compiler",
+            "peakrdl"
+          ],
+          "inputs": [
+            "contract_drafts"
+          ],
+          "outputs": [
+            "target_contract",
+            "unknown_fields",
+            "field_provenance"
+          ],
+          "evidence": [
+            "contract_conflicts_checked"
+          ]
+        },
+        {
+          "id": "ValidatePlatformContract",
+          "tool": "tools/contract_schema_gate.py",
+          "third_party": [],
+          "inputs": [
+            "platform_contracts"
+          ],
+          "outputs": [
+            "contract_schema_report"
+          ],
+          "evidence": [
+            "schema_valid",
+            "contract_conflicts_checked"
+          ]
+        },
+        {
+          "id": "CheckInputReadiness",
+          "tool": "tools/project_input_gate.py",
+          "third_party": [],
+          "inputs": [
+            "project_order",
+            "target_contract"
+          ],
+          "outputs": [
+            "input_readiness_report",
+            "missing_inputs"
+          ],
+          "evidence": [
+            "project_input_gate_pass",
+            "missing_inputs_recorded"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "BspBootAgent",
+        "DriverAgent"
+      ]
+    },
+    {
+      "name": "BspBootAgent",
+      "human_role": "BSP and boot engineer",
+      "mission": "Build a reproducible toolchain, boot chain and RT-Thread BSP and inspect their binary contracts.",
+      "owned_paths": [
+        "bsp",
+        "boot",
+        "platforms"
+      ],
+      "independent_verifier": false,
+      "actions": [
+        {
+          "id": "FreezeToolchain",
+          "tool": "tools/toolchain_freeze.py",
+          "third_party": [
+            "riscv-gnu-toolchain",
+            "k230-toolchain",
+            "QiMeng-TensorOp"
+          ],
+          "inputs": [
+            "target_contract",
+            "boot_contract"
+          ],
+          "outputs": [
+            "toolchain_report"
+          ],
+          "evidence": [
+            "cross_toolchain_pass"
+          ]
+        },
+        {
+          "id": "BuildBootChain",
+          "tool": "tools/boot_build.py",
+          "third_party": [
+            "opensbi",
+            "u-boot",
+            "k230-sdk",
+            "QiMeng-TensorOp"
+          ],
+          "inputs": [
+            "platform",
+            "boot_contract"
+          ],
+          "outputs": [
+            "spl",
+            "opensbi",
+            "uboot",
+            "boot_build_report"
+          ],
+          "evidence": [
+            "boot_chain_build_pass"
+          ]
+        },
+        {
+          "id": "BuildRtThreadBsp",
+          "tool": "tools/bsp_build.py",
+          "third_party": [
+            "rt-thread",
+            "k230-sdk"
+          ],
+          "inputs": [
+            "platform",
+            "target_contract"
+          ],
+          "outputs": [
+            "elf",
+            "bin",
+            "map",
+            "bsp_build_report"
+          ],
+          "evidence": [
+            "vendor_rtsmart_bsp_build_pass"
+          ]
+        },
+        {
+          "id": "InspectFirmwareElf",
+          "tool": "tools/elf_inspect.py",
+          "third_party": [
+            "riscv-gnu-toolchain"
+          ],
+          "inputs": [
+            "elf",
+            "map"
+          ],
+          "outputs": [
+            "elf_inspection_report"
+          ],
+          "evidence": [
+            "entry_point_pass",
+            "driver_stack_link_pass"
+          ]
+        },
+        {
+          "id": "VerifyBootLayout",
+          "tool": "tools/boot_manifest.py",
+          "third_party": [],
+          "inputs": [
+            "boot_contract",
+            "boot_artifacts"
+          ],
+          "outputs": [
+            "boot_manifest"
+          ],
+          "evidence": [
+            "boot_layout_pass"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "RtThreadOsAgent",
+        "DriverAgent",
+        "MicroPythonAgent",
+        "VerificationAgent",
+        "ReleaseAgent"
+      ]
+    },
+    {
+      "name": "RtThreadOsAgent",
+      "human_role": "RTOS kernel and component engineer",
+      "mission": "Configure and test RT-Thread services required by deterministic AI workloads.",
+      "owned_paths": [
+        "bsp",
+        "sdk/packages/rvaic",
+        "platforms"
+      ],
+      "independent_verifier": false,
+      "actions": [
+        {
+          "id": "ConfigureRtThread",
+          "tool": "tools/rtthread_config_check.py",
+          "third_party": [
+            "rt-thread",
+            "k230-sdk"
+          ],
+          "inputs": [
+            "bsp",
+            "runtime_contract"
+          ],
+          "outputs": [
+            "kconfig_report"
+          ],
+          "evidence": [
+            "rtthread_config_pass"
+          ]
+        },
+        {
+          "id": "IntegrateAiService",
+          "tool": "tools/rtthread_rvaic_package_build.py",
+          "third_party": [
+            "rt-thread"
+          ],
+          "inputs": [
+            "bsp",
+            "rvaic_runtime",
+            "rvaic_package"
+          ],
+          "outputs": [
+            "rtthread_firmware",
+            "component_build_report"
+          ],
+          "evidence": [
+            "rvaic_rtthread_component_build_pass"
+          ]
+        },
+        {
+          "id": "TestOsPrimitives",
+          "tool": "tools/rvaic_rtthread_native_check.py",
+          "third_party": [
+            "rt-thread"
+          ],
+          "inputs": [
+            "rvaic_runtime"
+          ],
+          "outputs": [
+            "queue_timer_heap_report"
+          ],
+          "evidence": [
+            "rtthread_service_thread_pass",
+            "rtthread_event_ipc_pass",
+            "service_priority_queue_pass",
+            "backend_lock_watchdog_reset_pass",
+            "host_runtime_utest_pass"
+          ]
+        },
+        {
+          "id": "RunVirtualFirmware",
+          "tool": "tools/rtthread_virtual_portability.py",
+          "third_party": [
+            "rt-thread",
+            "renode_portable"
+          ],
+          "inputs": [
+            "bsp"
+          ],
+          "outputs": [
+            "virtual_firmware_report"
+          ],
+          "evidence": [
+            "rtthread_bsp_build_pass",
+            "virtual_firmware_portability_pass"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "MicroPythonAgent",
+        "VerificationAgent"
+      ]
+    },
+    {
+      "name": "DriverAgent",
+      "human_role": "peripheral and accelerator driver engineer",
+      "mission": "Implement contract-derived RT-Thread drivers with IRQ, DMA, cache, timeout and reset semantics.",
+      "owned_paths": [
+        "driver_reuse",
+        "sdk/drivers",
+        "platforms"
+      ],
+      "independent_verifier": false,
+      "actions": [
+        {
+          "id": "BuildRegisterIr",
+          "tool": "tools/driver_adapt.py",
+          "third_party": [
+            "open-cmsis-pack-devtools"
+          ],
+          "inputs": [
+            "target_contract",
+            "register_contract"
+          ],
+          "outputs": [
+            "register_ir",
+            "register_header"
+          ],
+          "evidence": [
+            "register_header_generated"
+          ]
+        },
+        {
+          "id": "RetrieveReferenceDrivers",
+          "tool": "tools/github_driver_reuse.py",
+          "third_party": [
+            "rt-thread",
+            "tinyusb",
+            "wujian100_open",
+            "tamago",
+            "kendryte-standalone-sdk",
+            "k230-sdk"
+          ],
+          "inputs": [
+            "target_contract"
+          ],
+          "outputs": [
+            "driver_reuse_index",
+            "license_report"
+          ],
+          "evidence": [
+            "similar_driver_retrieved",
+            "reference_patch_plan_recorded"
+          ]
+        },
+        {
+          "id": "GenerateDrivers",
+          "tool": "tools/driver_adapt.py",
+          "third_party": [
+            "rt-thread",
+            "NMSIS"
+          ],
+          "inputs": [
+            "target_contract",
+            "register_ir"
+          ],
+          "outputs": [
+            "driver_sources",
+            "driver_build_files"
+          ],
+          "evidence": [
+            "rtthread_driver_skeleton_generated"
+          ]
+        },
+        {
+          "id": "VerifyDrivers",
+          "tool": "tools/driver_adapt.py",
+          "third_party": [
+            "cppcheck"
+          ],
+          "inputs": [
+            "driver_artifact"
+          ],
+          "outputs": [
+            "driver_verification_report"
+          ],
+          "evidence": [
+            "driver_unit_pass",
+            "irq_dma_smoke_pass",
+            "fault_injection_pass"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "VerificationAgent"
+      ]
+    },
+    {
+      "name": "MicroPythonAgent",
+      "human_role": "SDK language binding engineer",
+      "mission": "Expose the same RVAIC runtime through a firmware-integrated MicroPython module.",
+      "owned_paths": [
+        "products/sysuos_k230_v3p0",
+        "tools/firmware_build.py"
+      ],
+      "independent_verifier": false,
+      "actions": [
+        {
+          "id": "BuildMicroPythonFirmware",
+          "tool": "tools/firmware_build.py",
+          "third_party": [
+            "canmv-k230",
+            "k230-toolchain"
+          ],
+          "inputs": [
+            "project_order",
+            "bsp"
+          ],
+          "outputs": [
+            "complete_firmware_image",
+            "firmware_manifest"
+          ],
+          "evidence": [
+            "firmware_image_created",
+            "firmware_components_present",
+            "source_lock_present",
+            "container_digest_pinned",
+            "overlay_readback_pass",
+            "boot_region_preserved"
+          ]
+        },
+        {
+          "id": "InspectMicroPythonImage",
+          "tool": "tools/k230_image_analyze.py",
+          "third_party": [],
+          "inputs": [
+            "complete_firmware_image"
+          ],
+          "outputs": [
+            "image_analysis"
+          ],
+          "evidence": [
+            "mbr_signature_pass",
+            "partition_layout_pass",
+            "micropython_image_layout_pass"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "VerificationAgent",
+        "ReleaseAgent"
+      ]
+    },
+    {
+      "name": "VerificationAgent",
+      "human_role": "independent verification and HIL engineer",
+      "mission": "Independently rebuild, test, simulate, flash and attribute evidence levels E1 through E6.",
+      "owned_paths": [
+        "evidence",
+        "sim",
+        "hil",
+        "flash"
+      ],
+      "independent_verifier": true,
+      "actions": [
+        {
+          "id": "VerifyProductImage",
+          "tool": "tools/product_image_verify.py",
+          "third_party": [
+            "mtools"
+          ],
+          "inputs": [
+            "firmware_manifest",
+            "complete_firmware_image",
+            "product_overlay"
+          ],
+          "outputs": [
+            "product_image_verify_report"
+          ],
+          "evidence": [
+            "overlay_readback_pass",
+            "boot_region_preserved",
+            "product_entrypoint_present",
+            "image_partition_contract_pass"
+          ]
+        },
+        {
+          "id": "RunVirtualVerification",
+          "tool": "tools/sim_verify.py",
+          "third_party": [
+            "qemu",
+            "renode_portable",
+            "nnsmith"
+          ],
+          "inputs": [
+            "firmware",
+            "simulation_contract"
+          ],
+          "outputs": [
+            "simulation_report"
+          ],
+          "evidence": [
+            "virtual_execution_pass"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "SecurityAgent",
+        "ReleaseAgent",
+        "ADAM"
+      ]
+    },
+    {
+      "name": "SecurityAgent",
+      "human_role": "product security and supply-chain engineer",
+      "mission": "Verify dependency provenance, licenses, vulnerabilities, ABI policy and release signatures.",
+      "owned_paths": [
+        "evidence/security",
+        "third_party.manifest.json",
+        "release/security"
+      ],
+      "independent_verifier": false,
+      "actions": [
+        {
+          "id": "GenerateSbom",
+          "tool": "tools/security_supply_chain.py",
+          "third_party": [],
+          "inputs": [
+            "release_candidate"
+          ],
+          "outputs": [
+            "offline_file_inventory"
+          ],
+          "evidence": [
+            "sbom_generated"
+          ]
+        },
+        {
+          "id": "VerifyDependencyProvenance",
+          "tool": "tools/security_supply_chain.py",
+          "third_party": [],
+          "inputs": [
+            "release_candidate",
+            "offline_file_inventory",
+            "third_party_lock"
+          ],
+          "outputs": [
+            "dependency_provenance_report"
+          ],
+          "evidence": [
+            "dependency_provenance_policy_pass",
+            "supply_chain_provenance_pass"
+          ]
+        },
+        {
+          "id": "SignRelease",
+          "tool": "tools/security_supply_chain.py",
+          "third_party": [],
+          "inputs": [
+            "release_candidate",
+            "provenance"
+          ],
+          "outputs": [
+            "hmac_signature",
+            "signed_provenance"
+          ],
+          "evidence": [
+            "signature_pass",
+            "provenance_pass"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "ReleaseAgent"
+      ]
+    },
+    {
+      "name": "ReleaseAgent",
+      "human_role": "SDK integration and release engineer",
+      "mission": "Compose verified boot, BSP, runtime, model and application artifacts into reproducible SDK images and archives.",
+      "owned_paths": [
+        "products/sysuos_k230_v3p0",
+        "tools/firmware_release.py",
+        "tools/release_package.py"
+      ],
+      "independent_verifier": false,
+      "actions": [
+        {
+          "id": "StageFirmwareImage",
+          "tool": "tools/firmware_release.py",
+          "third_party": [],
+          "inputs": [
+            "firmware_manifest",
+            "complete_firmware_image",
+            "product_image_verify_report"
+          ],
+          "outputs": [
+            "sdk_image",
+            "rollback_image",
+            "firmware_release_report"
+          ],
+          "evidence": [
+            "firmware_image_staged",
+            "rollback_image_staged",
+            "image_hash_match_pass",
+            "product_image_verified_pass",
+            "self_hosted_boot_chain"
+          ]
+        },
+        {
+          "id": "PackageSdkRelease",
+          "tool": "tools/release_package.py",
+          "third_party": [
+            "rt-thread",
+            "tvm",
+            "genimage"
+          ],
+          "inputs": [
+            "sdk_image",
+            "sdk_artifacts"
+          ],
+          "outputs": [
+            "sdk_archive",
+            "release_manifest",
+            "rollback_plan"
+          ],
+          "evidence": [
+            "versioned_artifacts",
+            "release_notes",
+            "rollback_plan"
+          ]
+        },
+        {
+          "id": "ApplyReleaseGate",
+          "tool": "tools/release_gate.py",
+          "third_party": [],
+          "inputs": [
+            "verification_report",
+            "security_report",
+            "release_manifest",
+            "image_report"
+          ],
+          "outputs": [
+            "release_gate_report"
+          ],
+          "evidence": [
+            "sdk_candidate_ready",
+            "security_handoff_bound",
+            "verification_handoff_bound"
+          ]
+        }
+      ],
+      "handoff_to": [
+        "SecurityAgent",
+        "VerificationAgent",
+        "ADAM"
+      ]
+    }
+  ]
+}

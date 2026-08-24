@@ -1,0 +1,496 @@
+{
+  "name": "canmv_k230_lp4_v3",
+  "isa": "rv64gcv",
+  "abi": "lp64d",
+  "cpu": "k230-c908-rvv",
+  "cores": [
+    {
+      "id": "cpu0",
+      "role": "little-core-control",
+      "frequency_mhz": 800,
+      "rvv": false
+    },
+    {
+      "id": "cpu1",
+      "role": "big-core-rt-smart-ai",
+      "frequency_mhz": 1600,
+      "rvv": true,
+      "vlen": 128
+    }
+  ],
+  "toolchain_prefix": "riscv64-unknown-elf-",
+  "toolchains": {
+    "bsp": {
+      "prefix": "third_party/k230-toolchain/riscv64-linux-musleabi_for_x86_64-pc-linux-gnu/bin/riscv64-unknown-linux-musl-",
+      "isa": "rv64gcv",
+      "abi": "lp64d",
+      "gcc_sha256": "8d7f46aa135a7427aedec3e18bec424b005b505877fa9c318e07754584566160"
+    }
+  },
+  "rtos": "rt-thread-smart",
+  "board": {
+    "vendor": "CanMV",
+    "model": "CanMV-K230-LP4-V3.0",
+    "schematic": "SCH_CanMV-K230-LP4-V3.0_20240509.pdf",
+    "usb_serial": "CH342K",
+    "usb_serial_vid_pid": "1a86:55d2"
+  },
+  "memory": {
+    "memory_kind": "lpddr4",
+    "ddr_kb": 1048576,
+    "flash_kb": 262144,
+    "ai_arena_kb": 262144,
+    "regions": [
+      {
+        "name": "system_ddr",
+        "kind": "ddr",
+        "base": "0x00000000",
+        "size_bytes": 1073741824,
+        "owner": "shared",
+        "attributes": [
+          "rw",
+          "cacheable"
+        ]
+      },
+      {
+        "name": "kpu_l2_cache",
+        "kind": "accelerator_cache",
+        "base": "0x80000000",
+        "size_bytes": 2097152,
+        "owner": "cpu1",
+        "attributes": [
+          "rw"
+        ]
+      },
+      {
+        "name": "onchip_sram",
+        "kind": "sram",
+        "base": "0x80200000",
+        "size_bytes": 2097152,
+        "owner": "shared",
+        "attributes": [
+          "rwx"
+        ]
+      },
+      {
+        "name": "bootrom_loader",
+        "kind": "firmware_carveout",
+        "base": "0x80360000",
+        "size_bytes": 131072,
+        "owner": "cpu0",
+        "parent": "onchip_sram",
+        "attributes": [
+          "rwx",
+          "loader_only"
+        ]
+      },
+      {
+        "name": "spi_xip_window",
+        "kind": "storage_window",
+        "base": "0xc0000000",
+        "size_bytes": 134217728,
+        "owner": "cpu0",
+        "attributes": [
+          "rx",
+          "device"
+        ]
+      }
+    ]
+  },
+  "mmio_regions": [
+    {
+      "name": "kpu",
+      "base": "0x80400000",
+      "size_bytes": 2048,
+      "owner": "cpu1",
+      "status": "source_verified"
+    },
+    {
+      "name": "fft",
+      "base": "0x80400800",
+      "size_bytes": 1024,
+      "owner": "cpu1",
+      "status": "source_verified"
+    },
+    {
+      "name": "ai2d",
+      "base": "0x80400c00",
+      "size_bytes": 1024,
+      "owner": "cpu1",
+      "status": "source_verified"
+    },
+    {
+      "name": "gsdma",
+      "base": "0x80800000",
+      "size_bytes": 16384,
+      "owner": "cpu1",
+      "status": "source_verified"
+    },
+    {
+      "name": "pdma",
+      "base": "0x80804000",
+      "size_bytes": 16384,
+      "owner": "cpu1",
+      "status": "source_verified"
+    },
+    {
+      "name": "mailbox",
+      "base": "0x91104000",
+      "size_bytes": 4096,
+      "owner": "shared",
+      "status": "source_verified"
+    },
+    {
+      "name": "timer",
+      "base": "0x91105800",
+      "size_bytes": 2048,
+      "owner": "cpu1",
+      "status": "source_verified"
+    },
+    {
+      "name": "uart0",
+      "base": "0x91400000",
+      "size_bytes": 4096,
+      "owner": "cpu0",
+      "status": "source_verified"
+    },
+    {
+      "name": "uart3",
+      "base": "0x91403000",
+      "size_bytes": 4096,
+      "owner": "cpu1",
+      "status": "source_verified"
+    },
+    {
+      "name": "sd_hc",
+      "base": "0x91580000",
+      "size_bytes": 8192,
+      "owner": "cpu0",
+      "status": "source_verified"
+    },
+    {
+      "name": "hi_sys_config",
+      "base": "0x91585000",
+      "size_bytes": 1024,
+      "owner": "cpu0",
+      "status": "source_verified"
+    },
+    {
+      "name": "plic",
+      "base": "0xf00000000",
+      "size_bytes": 67108864,
+      "owner": "shared",
+      "status": "source_verified"
+    },
+    {
+      "name": "clint",
+      "base": "0xf04000000",
+      "size_bytes": 67108864,
+      "owner": "shared",
+      "status": "source_verified"
+    }
+  ],
+  "amp": {
+    "enabled": true,
+    "mode": "asymmetric",
+    "core_ownership": {
+      "cpu0": [
+        "system_ddr",
+        "onchip_sram",
+        "bootrom_loader",
+        "spi_xip_window",
+        "mailbox",
+        "uart0",
+        "sd_hc",
+        "hi_sys_config",
+        "plic",
+        "clint"
+      ],
+      "cpu1": [
+        "system_ddr",
+        "onchip_sram",
+        "kpu_l2_cache",
+        "kpu",
+        "fft",
+        "ai2d",
+        "gsdma",
+        "pdma",
+        "mailbox",
+        "timer",
+        "uart3",
+        "plic",
+        "clint"
+      ]
+    },
+    "shared_resources": [
+      "system_ddr",
+      "onchip_sram",
+      "mailbox",
+      "plic",
+      "clint"
+    ],
+    "ipc": {
+      "kind": "mailbox",
+      "mmio_region": "mailbox",
+      "participants": [
+        "cpu0",
+        "cpu1"
+      ],
+      "irq_status": "unresolved"
+    },
+    "boot_sequence": [
+      {
+        "order": 0,
+        "core": "cpu0",
+        "stage": "bootrom_spl_ddr_init"
+      },
+      {
+        "order": 1,
+        "core": "cpu0",
+        "stage": "load_amp_images"
+      },
+      {
+        "order": 2,
+        "core": "cpu1",
+        "stage": "rt_smart_start"
+      },
+      {
+        "order": 3,
+        "core": "cpu0",
+        "stage": "linux_start"
+      }
+    ]
+  },
+  "cache": {
+    "line_size": 64
+  },
+  "dma": {
+    "base": "0x80804000",
+    "size_bytes": 16384,
+    "mmio_region": "pdma",
+    "alignment": 64,
+    "channels": 8,
+    "irq_vectors": [
+      139,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202
+    ],
+    "max_transfer_bytes": 1048576
+  },
+  "interrupt": {
+    "controller": "riscv,plic0",
+    "mmio_region": "plic",
+    "base": "0xf00000000",
+    "size_bytes": 67108864,
+    "source_count": 256,
+    "vector_offset": 16,
+    "contexts": [
+      {
+        "core": "cpu0",
+        "privilege": "supervisor",
+        "status": "source_verified"
+      },
+      {
+        "core": "cpu1",
+        "privilege": "supervisor",
+        "context_index": 1,
+        "status": "source_verified"
+      }
+    ],
+    "local_controller": {
+      "kind": "clint",
+      "base": "0xf04000000",
+      "size_bytes": 67108864
+    },
+    "irqs": {
+      "uart0": {
+        "vector": 16,
+        "source": "K230 DTS"
+      },
+      "uart3": {
+        "vector": 19,
+        "source": "RT-Smart drv_uart.c"
+      },
+      "timer0": {
+        "vector": 101,
+        "source": "RT-Smart drv_timer.h"
+      },
+      "pdma0": {
+        "vector": 139,
+        "source": "RT-Smart drv_pdma.c"
+      },
+      "kpu": {
+        "vector": 189,
+        "source": "RT-Smart gnne_dev.c: 16 + 173"
+      }
+    }
+  },
+  "timer": {
+    "kind": "dw-apb-timer",
+    "mmio_region": "timer",
+    "base": "0x91105800",
+    "size_bytes": 2048,
+    "irq_vectors": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106
+    ],
+    "clock_hz": 100000000
+  },
+  "media": {
+    "sdcard": {
+      "controller": "sdhci-dwcmshc",
+      "index": 1,
+      "base": "0x91581000",
+      "register_size": "0x1000",
+      "block_bytes": 512,
+      "max_transfer_blocks": 1,
+      "bus_width": 4,
+      "max_clock_hz": 100000000,
+      "initial_clock_hz": 400000,
+      "sysctl_base": "0x91585000",
+      "sysctl_ctrl_offset": "0x08",
+      "card_power_stable_bit": 0,
+      "write_protect_disable_bit": 2,
+      "mshc_ctrl_offset": "0x508",
+      "mshc_ctrl_value": "0x00",
+      "contract_level": "sdhci_register_contract_unverified_on_board",
+      "source_evidence": [
+        "kendryte/k230_sdk:src/big/rt-smart/kernel/bsp/maix3/board/interdrv/sdio/drv_sdhci.c",
+        "kendryte/k230_sdk:src/big/rt-smart/kernel/bsp/maix3/board/interdrv/sdio/drv_sdhci.h",
+        "kendryte/k230_sdk:src/big/rt-smart/kernel/bsp/maix3/board/board.h"
+      ],
+      "physical_write_requires": [
+        "ADAM_K230_SD_INIT_PASS",
+        "ADAM_K230_FLASH_WRITE_PASS",
+        "ADAM_K230_FLASH_READBACK_PASS",
+        "ADAM_K230_FLASH_HASH_PASS"
+      ]
+    }
+  },
+  "rvv": {
+    "enabled": true,
+    "version": "1.0",
+    "vlen": 128,
+    "vlen_bits": 128,
+    "legal_sew_bits": [
+      32
+    ],
+    "legal_lmul": [
+      "m1"
+    ],
+    "tail_policy": [
+      "ta"
+    ],
+    "mask_policy": [
+      "ma"
+    ],
+    "min_alignment_bytes": 4,
+    "execution_cores": [
+      "cpu1"
+    ],
+    "forbidden_cores": [
+      "cpu0"
+    ],
+    "default_c_api": "inline_asm",
+    "required_static_evidence": [
+      "rvv_contract_pass",
+      "rvv_static_compile_pass",
+      "rvv_objdump_signature_pass"
+    ],
+    "required_board_evidence": [
+      "rvv_cpu1_board_diff_pass",
+      "rvv_cpu1_benchmark_pass"
+    ]
+  },
+  "npu": {
+    "enabled": true,
+    "kind": "kpu",
+    "ops": [
+      "conv2d",
+      "matmul",
+      "relu"
+    ],
+    "dtypes": [
+      "int8",
+      "int16"
+    ],
+    "matrix_tile": [
+      16,
+      16
+    ],
+    "base": "0x80400000",
+    "size_bytes": 2048,
+    "mmio_region": "kpu",
+    "irq": 189,
+    "irq_source": 173,
+    "irq_vector_offset": 16,
+    "ai2d_base": "0x80400c00",
+    "reset": {
+      "status": "unresolved",
+      "production_driver_allowed": false
+    },
+    "status": "requires_kpu_command_abi_and_board_diff"
+  },
+  "uart": {
+    "bootrom_console_base": "0x91400000",
+    "base": "0x91403000",
+    "mmio_region": "uart3",
+    "bootrom_mmio_region": "uart0",
+    "register_size": 4096,
+    "irq_cpu0": 16,
+    "irq_cpu1": 19,
+    "console_cpu0": "/dev/serial/by-id/usb-1a86_USB_Dual_Serial_5C78109061-if00",
+    "console_cpu1": "/dev/serial/by-id/usb-1a86_USB_Dual_Serial_5C78109061-if02",
+    "baudrate": 115200
+  },
+  "boot": {
+    "bootrom_core": "cpu0",
+    "boot0_button": "SW3",
+    "reset_button": "SW1",
+    "modes": {
+      "00": "SPI_NOR",
+      "01": "EMMC",
+      "10": "SPI_NAND",
+      "11": "SDCARD"
+    }
+  },
+  "firmware": {
+    "image": "build/canmv_k230_lp4_v3/firmware.img",
+    "bootrom_loader": "build/canmv_k230_lp4_v3/bootrom_loader.bin",
+    "bootrom_loader_address": "0x80360000",
+    "bootrom_loader_sram_bytes": "0x20000",
+    "bootrom_allow_missing_cpu_info": true,
+    "serial": "/dev/serial/by-id/usb-1a86_USB_Dual_Serial_5C78109061-if00",
+    "baudrate": 115200
+  },
+  "_provenance": {
+    "status": "source_verified_not_board_verified",
+    "k230_sdk_commit": "7e302f733311d284be255f0d81d3463b6ae6ee6d",
+    "source_revisions": {
+      "k230-sdk": "7e302f733311d284be255f0d81d3463b6ae6ee6d",
+      "canmv-k230": "c05f7f56e7d634760d0ae8c57a7d81607f8e4823"
+    },
+    "sources": [
+      "https://github.com/kendryte/k230_sdk/blob/7e302f733311d284be255f0d81d3463b6ae6ee6d/src/big/rt-smart/kernel/bsp/maix3/board/board.h",
+      "https://github.com/kendryte/k230_sdk/blob/7e302f733311d284be255f0d81d3463b6ae6ee6d/src/big/rt-smart/kernel/bsp/maix3/c908/plic.h",
+      "https://github.com/kendryte/k230_sdk/blob/7e302f733311d284be255f0d81d3463b6ae6ee6d/src/big/rt-smart/kernel/bsp/maix3/board/interdrv/gnne/gnne_dev.c",
+      "https://github.com/kendryte/k230_sdk/blob/7e302f733311d284be255f0d81d3463b6ae6ee6d/src/big/rt-smart/kernel/bsp/maix3/board/interdrv/pdma/drv_pdma.c",
+      "https://github.com/kendryte/k230_sdk/blob/7e302f733311d284be255f0d81d3463b6ae6ee6d/src/big/rt-smart/kernel/bsp/maix3/board/interdrv/hwtimer/drv_timer.h",
+      "https://github.com/kendryte/k230_sdk/blob/7e302f733311d284be255f0d81d3463b6ae6ee6d/src/little/buildroot-ext/package/hw-c910/hw/k230.dts.txt"
+    ],
+    "unresolved": [
+      "mailbox IRQ routing",
+      "KPU reset register and recovery sequence",
+      "physical board memory reservations"
+    ]
+  }
+}

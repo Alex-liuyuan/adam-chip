@@ -1,0 +1,5 @@
+{
+  "fig_ccap_plan_object": "CECAP plan object. The compiler emits not only code but a contract-and-evidence-carrying plan containing graph, backend, layout, precision, schedule, memory, dependencies, fallback, applicability domain, and evidence.",
+  "fig_ccap_hierarchical_search": "Contract-constrained hierarchical search. CECAP filters illegal plans using hardware contracts before propagating Pareto candidates through graph, algorithm, TensorIR, and hardware-mapping levels.",
+  "fig_ccap_evidence_ladder": "Proof-carrying compilation evidence ladder. The current prototype reaches static, compile, host-diff, and virtual RTOS evidence, while board and stress/performance evidence remain unfilled."
+}

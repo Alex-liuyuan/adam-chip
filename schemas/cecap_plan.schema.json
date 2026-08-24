@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.cecap-plan.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "plan_id", "model_sha256", "target_sha256", "runtime_abi_sha256", "provider_abi_sha256", "domain", "plans", "memory", "evidence_sha256", "policy_sha256", "arrival_model"],
+  "properties": {
+    "schema": {"const": "soc-image.cecap-plan.v2"},
+    "plan_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "model_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "target_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "runtime_abi_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "provider_abi_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "domain": {
+      "type": "object", "additionalProperties": false,
+      "required": ["inputs", "precision", "runtime_requirements"],
+      "properties": {
+        "inputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/tensor"}},
+        "precision": {"enum": ["fp32", "fp16", "int8"]},
+        "runtime_requirements": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "plans": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "role", "independently_valid", "evidence_obligations", "segments"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 1, "maximum": 65535},
+          "role": {"enum": ["primary", "fallback"]},
+          "independently_valid": {"const": true},
+          "evidence_obligations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "segments": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"$ref": "#/$defs/segment"}}
+        }
+      }
+    },
+    "memory": {
+      "type": "object", "additionalProperties": false,
+      "required": ["arena_bytes", "alignment_bytes", "lifetimes", "alias_rules"],
+      "properties": {
+        "arena_bytes": {"type": "integer", "minimum": 1},
+        "alignment_bytes": {"type": "integer", "minimum": 1},
+        "lifetimes": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "alias_rules": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "policy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "arrival_model": {
+      "type": "object", "additionalProperties": false,
+      "required": ["minimum_interarrival_us", "relative_deadline_us", "reservations"],
+      "properties": {
+        "minimum_interarrival_us": {"type": "integer", "minimum": 1},
+        "relative_deadline_us": {"type": "integer", "minimum": 1},
+        "reservations": {"type": "array", "minItems": 1, "items": {"type": "object"}}
+      }
+    }
+  },
+  "$defs": {
+    "tensor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "shape", "dtype", "layout"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "shape": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 1}},
+        "dtype": {"enum": ["float32", "float16", "int8"]},
+        "layout": {"type": "string", "minLength": 1}
+      }
+    },
+    "segment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "resource", "dependencies", "wcet_us", "buffers", "coherency_cost_us", "recovery_cost_us"],
+      "properties": {
+        "id": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "resource": {"enum": ["cpu", "rvv", "npu", "dma"]},
+        "dependencies": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "wcet_us": {"type": "integer", "minimum": 1},
+        "buffers": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "coherency_cost_us": {"type": "integer", "minimum": 0},
+        "recovery_cost_us": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

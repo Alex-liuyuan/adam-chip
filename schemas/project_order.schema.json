@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "adam.project_order.v1",
+  "title": "ADAM SDK adaptation project order",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["project_id", "platform", "target", "runtime", "image_media", "required_evidence_level"],
+  "properties": {
+    "project_id": {"type": "string", "minLength": 1},
+    "platform": {"type": "string", "minLength": 1},
+    "target": {"type": "string", "minLength": 1},
+    "hardware_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "trm": {"type": "array", "items": {"type": "string"}},
+        "schematic": {"type": "array", "items": {"type": "string"}},
+        "svd": {"type": "array", "items": {"type": "string"}},
+        "dts": {"type": "array", "items": {"type": "string"}},
+        "cmsis_pack": {"type": "array", "items": {"type": "string"}},
+        "platformio": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "models": {"type": "array", "items": {"type": "string"}},
+    "features": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "firmware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backend"],
+      "properties": {
+        "backend": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "build_script": {"type": "string", "minLength": 1},
+        "artifact": {"type": "string", "minLength": 1},
+        "source_lock": {"type": "string", "minLength": 1},
+        "contract": {"type": "string", "minLength": 1},
+        "boot_region": {"type": "string", "minLength": 1},
+        "overlay": {"type": "string", "minLength": 1},
+        "product": {"type": "string", "minLength": 1},
+        "install_main": {"type": "boolean"}
+      }
+    },
+    "runtime": {"enum": ["rt-thread", "rt-smart"]},
+    "image_media": {"enum": ["sd", "emmc", "nor", "nand", "none"]},
+    "lab_config": {"type": ["string", "null"]},
+    "required_evidence_level": {"enum": ["E1", "E2", "E3", "E4", "E5", "E6"]},
+    "allowed_claims": {"type": "array", "items": {"type": "string"}},
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "build_minutes": {"type": "integer", "minimum": 1},
+        "board_runs": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

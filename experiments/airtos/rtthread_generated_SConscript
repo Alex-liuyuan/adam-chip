@@ -1,0 +1,54 @@
+import os
+from building import *
+
+Import('RTT_ROOT')
+cwd = GetCurrentDir()
+root = os.environ['AIRTOS_ROOT']
+target_include = os.environ['AIRTOS_TARGET_INCLUDE']
+upstream = os.path.join(cwd, 'upstream')
+common64 = os.path.join(RTT_ROOT, 'libcpu', 'risc-v', 'common64')
+common = os.path.join(RTT_ROOT, 'libcpu', 'risc-v', 'common')
+virt64 = os.path.join(RTT_ROOT, 'libcpu', 'risc-v', 'virt64')
+mm = os.path.join(RTT_ROOT, 'components', 'mm')
+avl = os.path.join(RTT_ROOT, 'components', 'utilities', 'libadt', 'avl')
+src = Glob('*.c') + [
+    os.path.join(cwd, '..', 'boot', 'startup.S'),
+    os.path.join(cwd, '..', 'boot', 'trap.S'),
+    os.path.join(upstream, 'libcpu/risc-v/common64/cpuport.c'),
+    os.path.join(upstream, 'libcpu/risc-v/common64/cpuport_gcc.S'),
+    os.path.join(upstream, 'libcpu/risc-v/common64/context_gcc.S'),
+    os.path.join(upstream, 'libcpu/risc-v/common64/sbi.c'),
+    os.path.join(upstream, 'libcpu/risc-v/common64/tick.c'),
+    os.path.join(upstream, 'libcpu/risc-v/common64/trap.c'),
+    os.path.join(upstream, 'libcpu/risc-v/common/atomic_riscv.c'),
+    os.path.join(upstream, 'libcpu/risc-v/virt64/start.c'),
+    os.path.join(upstream, 'libcpu/risc-v/virt64/interrupt.c'),
+    os.path.join(upstream, 'libcpu/risc-v/virt64/plic.c'),
+    os.path.join(upstream, 'libcpu/risc-v/virt64/cache.c'),
+    os.path.join(root, 'experiments/airtos/rtthread_minilib.c'),
+    os.path.join(root, 'experiments/airtos/coherency_formal.c'),
+    os.path.join(root, 'engine/rt_ai_templates/runtime/aeg_loader.c'),
+    os.path.join(root, 'engine/rt_ai_templates/runtime/evidence.c'),
+    os.path.join(root, 'engine/rt_ai_templates/runtime/session.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/admission.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/coherency.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/coordinator.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/plan_select.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/recovery.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/resource_queue.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/rt_ai_port_rtthread.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/sim_edf.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/tensor_memory.c'),
+    os.path.join(root, 'engine/rt_ai_templates/os/trace.c'),
+]
+group = DefineGroup('GeneratedBsp', src, depend=[''], CPPPATH=[
+    cwd,
+    os.path.join(upstream, 'libcpu/risc-v/common64'),
+    os.path.join(upstream, 'libcpu/risc-v/common'),
+    os.path.join(upstream, 'libcpu/risc-v/virt64'),
+    common64, common, virt64, mm, avl,
+    os.path.join(root, 'engine/rt_ai_templates/include'),
+    os.path.join(root, 'experiments/airtos'),
+    target_include,
+])
+Return('group')

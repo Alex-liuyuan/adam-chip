@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.development-task.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "agent", "objective", "base_revision", "owned_paths", "required_outputs", "acceptance_commands", "max_attempts", "commit_message"],
+  "properties": {
+    "schema": {"const": "soc-image.development-task.v1"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "agent": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*Agent$"},
+    "objective": {"type": "string", "minLength": 20},
+    "base_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "owned_paths": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}
+    },
+    "required_outputs": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}
+    },
+    "context_paths": {
+      "type": "array", "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}
+    },
+    "source_contexts": {
+      "type": "array", "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["repository", "paths"],
+        "properties": {
+          "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+          "paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"}}
+        }
+      }
+    },
+    "acceptance_commands": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "array", "minItems": 1,
+        "items": {"type": "string", "minLength": 1}
+      }
+    },
+    "max_attempts": {"type": "integer", "minimum": 1, "maximum": 3},
+    "commit_message": {"type": "string", "minLength": 10, "maxLength": 100}
+  }
+}

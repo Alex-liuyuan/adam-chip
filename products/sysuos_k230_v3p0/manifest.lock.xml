@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="github" fetch="https://github.com/"/>
+  <project name="DaveGamble/cJSON" path="src/rtsmart/libs/3rd-party/cjson/cJSON" remote="github" revision="fb16e5cf358798aabb049655975cde8427101056"/>
+  <project name="canmv-k230/k230_rtsmart_examples" path="src/rtsmart/examples" remote="github" revision="d0cfd83c1870e134e794a9c01849a32c4e99fd6a"/>
+  <project name="canmv-k230/k230_rtsmart_lib" path="src/rtsmart/libs" remote="github" revision="7d76be21ddaed3e617fe5fe78464846fa1fc7c82"/>
+  <project name="canmv-k230/mbedtls" path="src/rtsmart/libs/3rd-party/mbedtls/mbedtls" remote="github" revision="a3ff9bce6b1c554a91bb3ced0f83046442a1694c"/>
+  <project name="canmv-k230/micropython" path="src/canmv/micropython" remote="github" revision="0295137e60c0de862c8ee72d81c88d9e57e3973b"/>
+  <project name="canmv-k230/mpp" path="src/rtsmart/mpp" remote="github" revision="d0d451023cedd7f4f1f2b32d507f1457e6a43c10"/>
+  <project name="canmv-k230/nncase_kmodels_v2_11" path="src/rtsmart/libs/kmodel" remote="github" revision="830f035e8907b89015e15c4a85cf7f59e06c4175"/>
+  <project name="canmv-k230/opensbi" path="src/opensbi/opensbi" remote="github" revision="ea1ceab9f0af65251e4a5c7d943a1cfa5e9002d6"/>
+  <project name="canmv-k230/rtsmart" path="src/rtsmart/rtsmart" remote="github" revision="123aadc192bfcc26e6e5f08fb617589110a995ba"/>
+  <project name="canmv-k230/u-boot" path="src/uboot/uboot" remote="github" revision="dd63771b84d0c72a6b3a5998ce1db10cd74045e1"/>
+  <project name="canmv-k230/ybsdcard" path="src/canmv/resources/ybsdcard" remote="github" revision="c6ce8fab643c8aad22b0db97b9ff1f10d4fd8d94"/>
+  <project name="eliben/pycparser" path="src/canmv/port/3rd-party/lv_bindings/pycparser" remote="github" revision="3cf6bf5eb16f5eadd4a058e41596145c407a79ad"/>
+  <project name="freetype/freetype" path="src/rtsmart/libs/3rd-party/freetype/freetype" remote="github" revision="1452355de99d22b0cba6ccc17bf5cdf3682ef61e"/>
+  <project name="jiejieTop/mqttclient" path="src/rtsmart/libs/3rd-party/mqttclient/mqttclient" remote="github" revision="956e0c8dcac02d4b107ccb49f1990c7718b6b585"/>
+  <project name="kendryte/canmv_k230" path="src/canmv" remote="github" revision="c2d1f5cc994c206d0032aaf6aaf09332f3dc3c4c"/>
+  <project name="kendryte/k230_rtos_sdk" path="." remote="github" revision="8c71e02ab098d69b9b7576bba9679b5455ad4a0d"/>
+  <project name="lvgl/lvgl" path="src/rtsmart/libs/3rd-party/lvgl/lvgl" remote="github" revision="c210a4efa2f474d0223d3e91c79963e1ae4ac0bc"/>
+  <project name="lvgl/lvgl" path="src/canmv/port/3rd-party/lv_bindings/lvgl" remote="github" revision="1bfdecf585bb50fbb22ed1c38450b5c9eb600196"/>
+  <project name="micropython/micropython-lib" path="src/canmv/micropython/lib/micropython-lib" remote="github" revision="e025c843b60e93689f0f991d753010bb5bd6a722"/>
+  <project name="warmcat/libwebsockets" path="src/rtsmart/libs/3rd-party/libwebsockets/libwebsockets" remote="github" revision="ff5a3aa702d8864caa23931fc508df099cc3e816"/>
+</manifest>

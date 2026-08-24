@@ -1,0 +1,15 @@
+menuconfig PKG_USING_RVAIC
+    bool "RVAIC Runtime"
+    default n
+
+if PKG_USING_RVAIC
+
+config RVAIC_USING_STATIC_AOT
+    bool "Enable static AOT executor"
+    default y
+
+config RVAIC_USING_PROFILER
+    bool "Enable profiler"
+    default y
+
+endif

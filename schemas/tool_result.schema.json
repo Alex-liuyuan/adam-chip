@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "soc-image.tool-result.v1",
+  "type": "object",
+  "required": ["status", "outputs"],
+  "properties": {
+    "status": {"enum": ["passed", "failed", "blocked"]},
+    "outputs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "artifacts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "blocker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "reason", "retryable", "owner"],
+      "properties": {
+        "code": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "reason": {"type": "string", "minLength": 1},
+        "retryable": {"type": "boolean"},
+        "owner": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*Agent$"}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "blocked"}}},
+      "then": {"required": ["blocker"]}
+    }
+  ]
+}
