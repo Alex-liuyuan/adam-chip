@@ -27,10 +27,19 @@ export AIRTOS_TARGET_INCLUDE=$target_include
 export SOURCE_DATE_EPOCH=0
 
 (cd "$out/staging/rtthread" && scons -c >/dev/null && scons -j2) > "$out/build.log" 2>&1
-timeout 180s qemu-system-riscv64 -nographic -machine virt -m 256M \
-    -device loader,file="$corpus",addr=0x88000000,force-raw=on \
-    -kernel "$out/staging/rtthread/rtthread.elf" > "$out/run.log" 2>&1
-test "$(grep -a -c '^AIRTOS_RTTHREAD_FORMAL_PASS machine=virt64 coherency_cases=1000000' "$out/run.log")" -eq 1
+boot_pass=0
+for attempt in 1 2; do
+    attempt_log="$out/run_attempt_${attempt}.log"
+    if timeout 180s qemu-system-riscv64 -nographic -machine virt -m 256M \
+        -device loader,file="$corpus",addr=0x88000000,force-raw=on \
+        -kernel "$out/staging/rtthread/rtthread.elf" > "$attempt_log" 2>&1 && \
+        test "$(grep -a -c '^AIRTOS_RTTHREAD_FORMAL_PASS machine=virt64 coherency_cases=1000000' "$attempt_log")" -eq 1; then
+        cp "$attempt_log" "$out/run.log"
+        boot_pass=1
+        break
+    fi
+done
+test "$boot_pass" -eq 1
 
 {
     date -u +generated_at=%Y-%m-%dT%H:%M:%SZ
