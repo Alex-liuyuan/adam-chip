@@ -1,0 +1,7 @@
+DEMO_UTC=2026-08-24T11:25:39Z
+COMMAND=git clone --depth 1 https://github.com/Alex-liuyuan/adam-chip.git adam-chip
+Cloning into 'adam-chip'...
+REMOTE=https://github.com/Alex-liuyuan/adam-chip.git
+DEMO_BASE_COMMIT=f6ece84
+WORKTREE_SOURCE_CLEAN=PASS
+REMOTE_CLONE_PASS

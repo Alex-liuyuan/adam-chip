@@ -4,6 +4,129 @@ This project builds a software image from SoC and board hardware materials. The
 production entry point does not accept a vendor SDK, firmware image, defconfig,
 toolchain path, operating-system choice, or prewritten target contract.
 
+## 完整成功使用演示
+
+以下记录来自 `2026-08-24` 对 GitHub 远端仓库的一次全新克隆，测试基线为
+`f6ece84`。整个流程使用真实项目源码、锁定的第三方源码和已发布的论文证据，
+没有使用模拟输入。原始文本日志保存在
+[`docs/quickstart_demo/logs`](docs/quickstart_demo/logs)，便于搜索和复核。
+
+### 步骤一：从 GitHub 检出项目
+
+```sh
+git clone --depth 1 https://github.com/Alex-liuyuan/adam-chip.git adam-chip
+cd adam-chip
+```
+
+成功判据：远端地址正确、提交可检出且初始工作区干净。本次记录得到
+`REMOTE_CLONE_PASS`。
+
+![从 GitHub 检出项目](docs/quickstart_demo/screenshots/01.png)
+
+### 步骤二：安装项目实际使用的第三方源码
+
+```sh
+gh release download dependencies-20260824 \
+  --repo Alex-liuyuan/adam-chip \
+  --pattern 'adam-chip-dependencies-20260824.tar.zst'
+echo 'f2e59373cbaecf6841085c32bb5790ec639c7d8dd59f7992d783690184d232e6  adam-chip-dependencies-20260824.tar.zst' | sha256sum -c -
+mkdir -p third_party
+tar --zstd -xf adam-chip-dependencies-20260824.tar.zst \
+  -C third_party --strip-components=2 \
+  adam-chip-dependencies-20260824/sources
+```
+
+成功判据：压缩包摘要一致，RT-Thread、TVM、MicroPython 与 K230 SDK 等六个
+锁定源码快照均解压完成。本次记录得到 `DEPENDENCY_INSTALL_PASS`。
+
+![安装锁定的第三方源码](docs/quickstart_demo/screenshots/02.png)
+
+### 步骤三：建立 Python 运行环境
+
+```sh
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements-agent.txt
+python -m pip check
+```
+
+成功判据：依赖检查输出 `No broken requirements found.`。本次使用 Python
+3.12.3，并得到 `PYTHON_DEPENDENCIES_PASS`。
+
+![建立 Python 运行环境](docs/quickstart_demo/screenshots/03.png)
+
+### 步骤四：执行严格门禁和干净克隆验证
+
+```sh
+python tools/run_strict_tests.py
+python tools/clean_checkout_test.py
+```
+
+成功判据：严格测试输出 `ok`，干净克隆验证返回 `"ok": true` 且退出码为
+0。本次记录得到 `CLEAN_CHECKOUT_VALIDATION_PASS`。
+
+![严格门禁与干净克隆验证](docs/quickstart_demo/screenshots/04.png)
+
+### 步骤五：验证项目核心入口
+
+```sh
+python chip_agents.py selftest
+python soc_image.py selftest
+```
+
+成功判据：两个入口都输出 `ok`，并能发现 8 个工程智能体以及
+`run`、`resume`、`status`、`sdk` 四类生产命令。本次记录得到
+`CORE_COMMANDS_PASS`。
+
+![验证项目核心入口](docs/quickstart_demo/screenshots/05.png)
+
+### 步骤六：下载并核验论文实验材料
+
+```sh
+gh release download paper3-airtos-evidence-20260824 \
+  --repo Alex-liuyuan/adam-chip \
+  --pattern 'paper3-airtos-evidence-20260824.tar.zst'
+echo 'd193c0e3f7073d34bb5088ef0eb47326cde43782771a4c007d28d59607c9fdf6  paper3-airtos-evidence-20260824.tar.zst' | sha256sum -c -
+tar --zstd -xf paper3-airtos-evidence-20260824.tar.zst
+cd paper3-airtos-evidence
+sha256sum -c MANIFEST.sha256
+cd ..
+```
+
+成功判据：归档摘要和文件清单全部通过。本次核验 504 个证据文件，其中包含
+26 个编译复现输入和 25 个 RT-Thread 平台文件，得到
+`EVIDENCE_BUNDLE_PASS`。
+
+![下载并核验论文实验材料](docs/quickstart_demo/screenshots/06.png)
+
+### 步骤七：运行完整 AIRTOS 跨架构软件实验
+
+安装 `gcc-riscv64-linux-gnu`、`gcc-arm-none-eabi`、`qemu-user` 和
+`qemu-system-arm` 后执行：
+
+```sh
+bash experiments/airtos/run_software_experiments.sh \
+  /tmp/airtos-reproduction \
+  paper3-airtos-evidence/reproduction-inputs/compiler_corrected/model.aeg \
+  paper3-airtos-evidence/reproduction-inputs/target \
+  paper3-airtos-evidence/reproduction-inputs/compiler_corrected \
+  paper3-airtos-evidence/reproduction-inputs/rtthread_platform
+```
+
+成功判据：脚本退出码为 0，根目录、RISC-V 实时操作系统实验和四款 ARM
+系统模型实验均产生 `RUN_PASS`。本次真实运行完成 7,950 个主机加载案例、
+7,950 个 RISC-V QEMU 加载案例、24,548 个调度场景、1,800 个可信材料案例
+和 1,000,000 次 RT-Thread 一致性检查；四款 ARM 模型均为零失败，共生成
+161 条文件校验记录，最终得到 `FULL_AIRTOS_EXPERIMENT_PASS`。
+
+![完整 AIRTOS 跨架构软件实验](docs/quickstart_demo/screenshots/07.png)
+
+这套演示覆盖不依赖实体开发板的完整复现流程。调用模型服务时需要使用者自己
+提供接口密钥；实体 K230 的摄像头、双模型、温度和长期稳定性实验还需要论文
+协议指定的开发板与测量仪器。密钥不会写入仓库，软件实验通过也不替代实体板
+实验结论。
+
 ## Supported environment
 
 - Linux x86-64 (Ubuntu 22.04/24.04 recommended)

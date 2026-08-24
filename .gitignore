@@ -4,6 +4,7 @@ __pycache__/
 *.py[cod]
 *.o
 *.tar.zst
+paper3-airtos-evidence/
 .env
 .env.*
 config/llm.local.json

@@ -1,0 +1,12 @@
+DEMO_UTC=2026-08-24T11:33:42Z
+COMMAND=.venv/bin/python tools/run_strict_tests.py
+ok
+COMMAND=.venv/bin/python tools/clean_checkout_test.py
+{
+  "ok": true,
+  "revision": "HEAD",
+  "stage": "strict_tests",
+  "returncode": 0,
+  "output": "ok\n"
+}
+CLEAN_CHECKOUT_VALIDATION_PASS

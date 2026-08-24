@@ -1,0 +1,11 @@
+DEMO_UTC=2026-08-24T11:28:09Z
+COMMAND=gh release download dependencies-20260824; sha256sum; tar --zstd -xf
+ARCHIVE_SHA256=f2e59373cbaecf6841085c32bb5790ec639c7d8dd59f7992d783690184d232e6
+INSTALLED_SOURCE_PROJECTS:
+k230-sdk
+micropython-stubber
+micropython-upstream
+rt-thread
+rtthread-micropython
+tvm
+DEPENDENCY_INSTALL_PASS

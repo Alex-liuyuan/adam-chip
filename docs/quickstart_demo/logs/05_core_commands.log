@@ -1,0 +1,8 @@
+DEMO_UTC=2026-08-24T11:34:09Z
+COMMAND=.venv/bin/python chip_agents.py selftest
+ok
+COMMAND=.venv/bin/python soc_image.py selftest
+ok
+ENGINEERING_AGENT_COUNT=8
+PRODUCTION_COMMANDS=run,resume,status,sdk
+CORE_COMMANDS_PASS
