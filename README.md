@@ -42,6 +42,30 @@ For the K230 platform backend and toolchain, use:
 INCLUDE_PLATFORM_BACKENDS=1 sh scripts/fetch_third_party.sh
 ```
 
+The redistributable source dependencies actually used by the project are also
+mirrored as a locked GitHub release bundle. Authorized repository users can install
+the six snapshots into `third_party/` without cloning them separately:
+
+```sh
+gh release download dependencies-20260824 \
+  --repo Alex-liuyuan/adam-chip \
+  --pattern 'adam-chip-dependencies-20260824.tar.zst'
+echo 'f2e59373cbaecf6841085c32bb5790ec639c7d8dd59f7992d783690184d232e6  adam-chip-dependencies-20260824.tar.zst' | sha256sum -c -
+mkdir -p third_party
+tar --zstd -xf adam-chip-dependencies-20260824.tar.zst \
+  -C third_party --strip-components=2 \
+  adam-chip-dependencies-20260824/sources
+```
+
+This bundle contains the locked RT-Thread, TVM, RT-Thread MicroPython,
+MicroPython build-tool subset, MicroPython Stubber subset and K230 SDK source.
+It includes `BUNDLE_MANIFEST.json`, all retained license notices and a per-file
+`SHA256SUMS` manifest. `canmv-k230`, the K230 binary toolchain and OpenMV are not
+mirrored because their declared redistribution status requires vendor clearance,
+toolchain-license review or file-level review. Fetch those only from their official
+locations through `scripts/fetch_third_party.sh` when the corresponding workflow
+requires them.
+
 Large dependencies are downloaded into `third_party/`. Their expected revisions
 and artifact hashes are recorded in `third_party.lock.json`; available groups and
 licensing boundaries are recorded in `third_party.manifest.json`.
