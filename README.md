@@ -130,6 +130,29 @@ camera, flashed image and stable `/dev/serial/by-id/...` devices described by th
 protocol. Hardware scripts do not fabricate a pass when a board or instrument is
 absent.
 
+The complete local Paper 3 evidence archive and exact v1 reproduction inputs are
+published separately from Git source. Authorized repository users can download and
+verify them as follows:
+
+```sh
+gh release download paper3-airtos-evidence-20260824 \
+  --repo Alex-liuyuan/adam-chip \
+  --pattern 'paper3-airtos-evidence-20260824.tar.zst'
+echo '1e02f2c829b27851e74a9a23822549c2555a89bd1ae9100bf17f61d52597e0bc  paper3-airtos-evidence-20260824.tar.zst' | sha256sum -c -
+tar --zstd -xf paper3-airtos-evidence-20260824.tar.zst
+```
+
+After installing the QEMU/cross-compiler packages, rerun the full software suite
+with the extracted inputs:
+
+```sh
+bash experiments/airtos/run_software_experiments.sh \
+  /tmp/airtos-reproduction \
+  paper3-airtos-evidence/reproduction-inputs/compiler_corrected/model.aeg \
+  paper3-airtos-evidence/reproduction-inputs/target \
+  paper3-airtos-evidence/reproduction-inputs/compiler_corrected
+```
+
 ## Repository map
 
 - `soc_image.py`: production hardware-material intake and run lifecycle

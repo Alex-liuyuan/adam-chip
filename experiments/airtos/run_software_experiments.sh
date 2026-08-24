@@ -2,10 +2,10 @@
 set -Eeuo pipefail
 
 root=$(cd "$(dirname "$0")/../.." && pwd)
-out=${1:?usage: run_software_experiments.sh OUT_DIR [AEG]}
-aeg=${2:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/apparatus/compiler_corrected/model.aeg}
-target_include=$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include
-trust_materials=$root/results/airtos/airtos-exp-v1-20260804-hostqemu/apparatus/compiler_corrected
+out=${1:?usage: run_software_experiments.sh OUT_DIR [AEG [TARGET_INCLUDE [TRUST_MATERIALS]]]}
+aeg=${2:-${AIRTOS_AEG:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/apparatus/compiler_corrected/model.aeg}}
+target_include=${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include}}
+trust_materials=${4:-${AIRTOS_TRUST_MATERIALS:-$(dirname "$aeg")}}
 test ! -e "$out"
 test -f "$aeg"
 test -f "$target_include/rt_ai_target.h"
@@ -121,7 +121,7 @@ qemu-riscv64 -cpu max "$out/bin/test_rt_ai_riscv64" > "$out/regression/qemu.log"
 bash "$root/experiments/airtos/run_rtthread_formal_qemu.sh" \
     "$out/core2/rtthread_virt" "$out/core12/rtthread_formal_corpus.bin"
 bash "$root/experiments/airtos/run_qemu_system_matrix.sh" \
-    "$out/core2/arm_system_matrix" "$out/core12/rtthread_formal_corpus.bin"
+    "$out/core2/arm_system_matrix" "$out/core12/rtthread_formal_corpus.bin" "$target_include"
 
 find "$out" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$out/SHA256SUMS"
 printf 'status=PASS\n' > "$out/RUN_PASS"
