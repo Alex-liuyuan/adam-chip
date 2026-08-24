@@ -2,10 +2,12 @@
 set -Eeuo pipefail
 
 root=$(cd "$(dirname "$0")/../.." && pwd)
-out=${1:?usage: run_rtthread_qemu_virt.sh OUT_DIR}
-platform=$root/build/phase_reports/phase10-final/integration/generated/platform
-target_include=$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include
+out=${1:?usage: run_rtthread_qemu_virt.sh OUT_DIR [PLATFORM [TARGET_INCLUDE]]}
+platform=${2:-${AIRTOS_RTTHREAD_PLATFORM:-$root/build/phase_reports/phase10-final/integration/generated/platform}}
+target_include=${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include}}
 test ! -e "$out"
+test -f "$platform/rtthread/SConstruct"
+test -f "$target_include/rt_ai_target.h"
 mkdir -p "$out/staging"
 trap 'status=$?; printf "exit_status=%s\n" "$status" > "$out/RUN_FAILED"; exit "$status"' ERR
 

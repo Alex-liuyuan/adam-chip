@@ -162,7 +162,7 @@ verify them as follows:
 gh release download paper3-airtos-evidence-20260824 \
   --repo Alex-liuyuan/adam-chip \
   --pattern 'paper3-airtos-evidence-20260824.tar.zst'
-echo '8febdf681c88d5dc39fbfdf840734ab0039deb2a6227223504623034efc5be5f  paper3-airtos-evidence-20260824.tar.zst' | sha256sum -c -
+echo 'd193c0e3f7073d34bb5088ef0eb47326cde43782771a4c007d28d59607c9fdf6  paper3-airtos-evidence-20260824.tar.zst' | sha256sum -c -
 tar --zstd -xf paper3-airtos-evidence-20260824.tar.zst
 ```
 
@@ -174,7 +174,8 @@ bash experiments/airtos/run_software_experiments.sh \
   /tmp/airtos-reproduction \
   paper3-airtos-evidence/reproduction-inputs/compiler_corrected/model.aeg \
   paper3-airtos-evidence/reproduction-inputs/target \
-  paper3-airtos-evidence/reproduction-inputs/compiler_corrected
+  paper3-airtos-evidence/reproduction-inputs/compiler_corrected \
+  paper3-airtos-evidence/reproduction-inputs/rtthread_platform
 ```
 
 ## Repository map
