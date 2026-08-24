@@ -8,6 +8,7 @@ target_include=$(realpath "${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/ai
 test ! -e "$out"
 test -f "$corpus"
 test -f "$target_include/rt_ai_target.h"
+sync "$corpus"
 mkdir -p "$out"/{bin,logs}
 trap 'status=$?; printf "exit_status=%s\n" "$status" > "$out/RUN_FAILED"; exit "$status"' ERR
 

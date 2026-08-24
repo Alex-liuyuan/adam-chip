@@ -10,6 +10,7 @@ test ! -e "$out"
 test -f "$corpus"
 test -f "$platform/rtthread/SConstruct"
 test -f "$target_include/rt_ai_target.h"
+sync "$corpus"
 mkdir -p "$out/staging"
 trap 'status=$?; printf "exit_status=%s\n" "$status" > "$out/RUN_FAILED"; exit "$status"' ERR
 

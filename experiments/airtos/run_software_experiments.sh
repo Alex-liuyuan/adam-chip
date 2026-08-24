@@ -34,6 +34,12 @@ trap 'status=$?; printf "exit_status=%s\n" "$status" > "$out/RUN_FAILED"; exit "
 python3 "$root/experiments/airtos/formal_suite.py" --aeg "$aeg" --out "$out/core12" \
     > "$out/core12.stdout.log" 2> "$out/core12.stderr.log"
 
+bash "$root/experiments/airtos/run_rtthread_formal_qemu.sh" \
+    "$out/core2/rtthread_virt" "$out/core12/rtthread_formal_corpus.bin" \
+    "$rtthread_platform" "$target_include"
+bash "$root/experiments/airtos/run_qemu_system_matrix.sh" \
+    "$out/core2/arm_system_matrix" "$out/core12/rtthread_formal_corpus.bin" "$target_include"
+
 sources=(
     "$root/engine/rt_ai_templates/runtime/aeg_loader.c"
     "$root/engine/rt_ai_templates/runtime/evidence.c"
@@ -122,12 +128,6 @@ riscv64-linux-gnu-gcc "${common[@]}" "${riscv[@]}" \
 ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 \
     "$out/bin/test_rt_ai_asan" > "$out/regression/asan_ubsan.log"
 qemu-riscv64 -cpu max "$out/bin/test_rt_ai_riscv64" > "$out/regression/qemu.log"
-
-bash "$root/experiments/airtos/run_rtthread_formal_qemu.sh" \
-    "$out/core2/rtthread_virt" "$out/core12/rtthread_formal_corpus.bin" \
-    "$rtthread_platform" "$target_include"
-bash "$root/experiments/airtos/run_qemu_system_matrix.sh" \
-    "$out/core2/arm_system_matrix" "$out/core12/rtthread_formal_corpus.bin" "$target_include"
 
 find "$out" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$out/SHA256SUMS"
 printf 'status=PASS\n' > "$out/RUN_PASS"
