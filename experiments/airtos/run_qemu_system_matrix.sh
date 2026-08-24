@@ -2,9 +2,9 @@
 set -Eeuo pipefail
 
 root=$(cd "$(dirname "$0")/../.." && pwd)
-out=${1:?usage: run_qemu_system_matrix.sh OUT_DIR CORPUS [TARGET_INCLUDE]}
-corpus=${2:?usage: run_qemu_system_matrix.sh OUT_DIR CORPUS [TARGET_INCLUDE]}
-target_include=${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include}}
+out=$(realpath -m "${1:?usage: run_qemu_system_matrix.sh OUT_DIR CORPUS [TARGET_INCLUDE]}")
+corpus=$(realpath "${2:?usage: run_qemu_system_matrix.sh OUT_DIR CORPUS [TARGET_INCLUDE]}")
+target_include=$(realpath "${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include}}")
 test ! -e "$out"
 test -f "$corpus"
 test -f "$target_include/rt_ai_target.h"

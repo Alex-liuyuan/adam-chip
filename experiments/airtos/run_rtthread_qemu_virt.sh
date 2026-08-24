@@ -2,9 +2,9 @@
 set -Eeuo pipefail
 
 root=$(cd "$(dirname "$0")/../.." && pwd)
-out=${1:?usage: run_rtthread_qemu_virt.sh OUT_DIR [PLATFORM [TARGET_INCLUDE]]}
-platform=${2:-${AIRTOS_RTTHREAD_PLATFORM:-$root/build/phase_reports/phase10-final/integration/generated/platform}}
-target_include=${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include}}
+out=$(realpath -m "${1:?usage: run_rtthread_qemu_virt.sh OUT_DIR [PLATFORM [TARGET_INCLUDE]]}")
+platform=$(realpath "${2:-${AIRTOS_RTTHREAD_PLATFORM:-$root/build/phase_reports/phase10-final/integration/generated/platform}}")
+target_include=$(realpath "${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include}}")
 test ! -e "$out"
 test -f "$platform/rtthread/SConstruct"
 test -f "$target_include/rt_ai_target.h"

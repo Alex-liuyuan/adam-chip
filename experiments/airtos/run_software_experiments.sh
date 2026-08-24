@@ -2,11 +2,15 @@
 set -Eeuo pipefail
 
 root=$(cd "$(dirname "$0")/../.." && pwd)
-out=${1:?usage: run_software_experiments.sh OUT_DIR [AEG [TARGET_INCLUDE [TRUST_MATERIALS [RTTHREAD_PLATFORM]]]]}
+out=$(realpath -m "${1:?usage: run_software_experiments.sh OUT_DIR [AEG [TARGET_INCLUDE [TRUST_MATERIALS [RTTHREAD_PLATFORM]]]]}")
 aeg=${2:-${AIRTOS_AEG:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/apparatus/compiler_corrected/model.aeg}}
 target_include=${3:-${AIRTOS_TARGET_INCLUDE:-$root/results/airtos/airtos-exp-v1-20260804-hostqemu/production_rt_ai_repaired/integration/generated/rt_ai/os/include}}
 trust_materials=${4:-${AIRTOS_TRUST_MATERIALS:-$(dirname "$aeg")}}
 rtthread_platform=${5:-${AIRTOS_RTTHREAD_PLATFORM:-$root/build/phase_reports/phase10-final/integration/generated/platform}}
+aeg=$(realpath "$aeg")
+target_include=$(realpath "$target_include")
+trust_materials=$(realpath "$trust_materials")
+rtthread_platform=$(realpath "$rtthread_platform")
 test ! -e "$out"
 test -f "$aeg"
 test -f "$target_include/rt_ai_target.h"
