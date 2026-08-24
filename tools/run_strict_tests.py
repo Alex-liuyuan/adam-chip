@@ -34,7 +34,10 @@ def main() -> int:
             if path.suffix == ".py":
                 py_compile.compile(str(path), cfile=str(Path(compile_dir) / f"{index}.pyc"), doraise=True)
             else:
-                json.loads(path.read_text(encoding="utf-8"))
+                try:
+                    json.loads(path.read_text(encoding="utf-8"))
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"invalid JSON: {relative}: {exc}") from exc
 
     roles = json.loads((ROOT / "agents/roles.json").read_text(encoding="utf-8"))["roles"]
     assert len(roles) == 8

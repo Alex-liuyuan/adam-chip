@@ -1,7 +1,9 @@
 third_party/
+.venv/
 __pycache__/
 *.py[cod]
 *.o
+*.tar.zst
 .env
 .env.*
 config/llm.local.json
