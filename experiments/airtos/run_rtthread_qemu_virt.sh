@@ -23,8 +23,8 @@ export AIRTOS_TARGET_INCLUDE=$target_include
 export SOURCE_DATE_EPOCH=0
 
 (cd "$out/staging/rtthread" && scons -c >/dev/null && scons -j2) > "$out/build.log" 2>&1
-timeout 20s qemu-system-riscv64 -nographic -machine virt -m 256M \
-    -kernel "$out/staging/rtthread/rtthread.elf" > "$out/run.log" 2>&1
+timeout 20s qemu-system-riscv64 -nographic -monitor none -machine virt -m 256M \
+    -kernel "$out/staging/rtthread/rtthread.elf" </dev/null > "$out/run.log" 2>&1
 test "$(grep -c '^AIRTOS_RTTHREAD_PASS machine=virt64 ' "$out/run.log")" -eq 1
 test "$(grep -c 'RT -     Thread' "$out/run.log")" -eq 1
 

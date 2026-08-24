@@ -31,9 +31,9 @@ export SOURCE_DATE_EPOCH=0
 boot_pass=0
 for attempt in 1 2; do
     attempt_log="$out/run_attempt_${attempt}.log"
-    if timeout 180s qemu-system-riscv64 -nographic -machine virt -m 256M \
+    if timeout 180s qemu-system-riscv64 -nographic -monitor none -machine virt -m 256M \
         -device loader,file="$corpus",addr=0x88000000,force-raw=on \
-        -kernel "$out/staging/rtthread/rtthread.elf" > "$attempt_log" 2>&1 && \
+        -kernel "$out/staging/rtthread/rtthread.elf" </dev/null > "$attempt_log" 2>&1 && \
         test "$(grep -a -c '^AIRTOS_RTTHREAD_FORMAL_PASS machine=virt64 coherency_cases=1000000' "$attempt_log")" -eq 1; then
         cp "$attempt_log" "$out/run.log"
         boot_pass=1

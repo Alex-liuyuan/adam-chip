@@ -33,8 +33,8 @@ run_machine() {
         "$root/experiments/airtos/coherency_formal.c" "$root/engine/rt_ai_templates/runtime/aeg_loader.c" \
         "$root/engine/rt_ai_templates/os/coherency.c" "$root/engine/rt_ai_templates/os/plan_select.c" \
         "$root/engine/rt_ai_templates/os/sim_edf.c" -lgcc -o "$elf"
-    timeout 300s qemu-system-arm -M "$machine" -cpu "$cpu" -nographic \
-        -semihosting-config enable=on,target=native -kernel "$elf" > "$log" 2>&1
+    timeout 300s qemu-system-arm -M "$machine" -cpu "$cpu" -nographic -monitor none \
+        -semihosting-config enable=on,target=native -kernel "$elf" </dev/null > "$log" 2>&1
     test "$(grep -c "^AIRTOS_ARM_FORMAL_PASS machine=$machine loader_cases=7950 schedule_cases=24548 coherency_cases=1000000 failures=0" "$log")" -eq 1
 }
 
