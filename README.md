@@ -162,7 +162,7 @@ verify them as follows:
 gh release download paper3-airtos-evidence-20260824 \
   --repo Alex-liuyuan/adam-chip \
   --pattern 'paper3-airtos-evidence-20260824.tar.zst'
-echo '1e02f2c829b27851e74a9a23822549c2555a89bd1ae9100bf17f61d52597e0bc  paper3-airtos-evidence-20260824.tar.zst' | sha256sum -c -
+echo '8febdf681c88d5dc39fbfdf840734ab0039deb2a6227223504623034efc5be5f  paper3-airtos-evidence-20260824.tar.zst' | sha256sum -c -
 tar --zstd -xf paper3-airtos-evidence-20260824.tar.zst
 ```
 
